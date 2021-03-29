@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_paint/controllers/paintController.dart';
-import 'package:flutter_custom_paint/mobile_canvas.dart';
+import 'package:flutter_custom_paint/widgets/mobile_canvas.dart';
 import 'package:flutter_custom_paint/widgets/painting_bar_widget.dart';
 import 'package:get/get.dart';
-
+import 'package:flutter_custom_paint/models/path.dart';
 import '../main.dart';
 
-class MyHomePage extends StatefulWidget {
+class PaintingPage extends StatefulWidget {
   final Controller controller;
   final int index;
   @override
-  MyHomePage(this.controller, this.index);
+  PaintingPage(this.controller, this.index);
   @override
-  _MyHomePageState createState() => _MyHomePageState(controller, index);
+  _PaintingPageState createState() => _PaintingPageState(controller, index);
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _PaintingPageState extends State<PaintingPage> {
   Controller controller;
   int index;
-  _MyHomePageState(this.controller, this.index);
+  _PaintingPageState(this.controller, this.index);
   Color selectedColor;
   double strokeWidth;
 
@@ -31,13 +31,6 @@ class _MyHomePageState extends State<MyHomePage> {
     strokeWidth = 2.0;
   }
 
-  // Container(
-  //         height: selectedColor == color ? 20 : 15,
-  //         width: selectedColor == color ? 20 : 15,
-  //         decoration: BoxDecoration(
-  //             color: color,
-  //             borderRadius: BorderRadius.all(Radius.circular(50))),
-  //       )
   List<Widget> listColor() {
     return [
       PaintingBar(selectedColor).colorContainer(
@@ -102,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () {
             this.setState(() {
               MyApp.mylist
-                  .add(MyHomePage(Controller(), MyApp.mylist.length - 1));
+                  .add(PaintingPage(Controller(), MyApp.mylist.length - 1));
             });
           }),
       IconButton(
@@ -123,11 +116,41 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   finalindex++;
                   index = finalindex;
+                  for (int i = 0;
+                      i <
+                          MyApp.mylist[finalindex - 1].controller.filepath
+                              .length;
+                      i++) {
+                    FilePath _filre =
+                        MyApp.mylist[finalindex - 1].controller.filepath[i];
+                    MyApp.mylist[finalindex].controller.paintss.add(new Paint()
+                      ..color = _filre.color
+                      ..style = PaintingStyle.stroke
+                      ..strokeJoin = StrokeJoin.round
+                      ..strokeCap = StrokeCap.round
+                      ..strokeWidth = _filre.strokeWidth);
+                    Path path = Path();
+                    path.lineTo(_filre.startPoint, _filre.endPoint);
+                    MyApp.mylist[finalindex].controller.paths.add(path);
+                  }
                   controllerPaintPage.update();
                   setState(() {});
                 }))
         : Container();
   }
+
+  // cont.paintss.add(new Paint()
+  //     ..color = Colors.black
+  //     ..style = PaintingStyle.stroke
+  //     ..strokeJoin = StrokeJoin.round
+  //     ..strokeCap = StrokeCap.round
+  //     ..strokeWidth = finalSize);
+  //   //
+  //   Path path = Path();
+  //   path.lineTo(20, 50);
+  //   cont.paths.add(path);
+  //   //
+  //   mylist.add(MyHomePage(cont, 2));
 
   Widget buttonForWard(height, width) {
     return index != 0 //* nút trái

@@ -22,10 +22,24 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static List<MyHomePage> mylist = [
-    MyHomePage(Controller(), 0),
-    // MyHomePage(Controller(), 1),
+  static List<PaintingPage> mylist = [
+    PaintingPage(Controller(), 0),
+    PaintingPage(Controller(), 1),
   ];
+
+  // List<PaintingPage> initList() {
+  //   List<PaintingPage> _list;
+  //   for (var i = 0; i < 2; i++) {
+  //     Controller _controller = Controller();
+  //     for (var i = 0; i < lenthPath; i++) {
+  //       Path _path = new Path();
+  //       _path.lineTo(pathx[i],pathx[i][0] )
+  //       _controller.paths.add(_path);
+
+  //     }
+  //     _list.add(PaintingPage() , i)
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +49,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(MyApp.mylist[0].controller, finalindex),
+      home: PaintingPage(MyApp.mylist[0].controller, finalindex),
     );
   }
 }
+
+// cont.paintss.add(new Paint()
+//       ..color = Colors.black
+//       ..style = PaintingStyle.stroke
+//       ..strokeJoin = StrokeJoin.round
+//       ..strokeCap = StrokeCap.round
+//       ..strokeWidth = finalSize);
+//     //
+//     Path path = Path();
+//     path.lineTo(20, 50);
+//     cont.paths.add(path);
