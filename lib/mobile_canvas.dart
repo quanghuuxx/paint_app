@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_custom_paint/main.dart';
 
+import 'controllers/paintController.dart';
+
 class CanvasPainting extends StatefulWidget {
   final Controller controller;
 
