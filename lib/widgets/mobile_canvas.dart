@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/path.dart';
+import 'package:flutter_custom_paint/screens/paint_page.dart';
 
 import '../controllers/paintController.dart';
 
@@ -127,7 +128,7 @@ class _CanvasPaintingState extends State<CanvasPainting> {
 
   @override
   Widget build(BuildContext context) {
-    controller = MyApp.mylist[finalindex].controller;
+    controller = PaintPage.mylist[finalindex].controller;
     return Scaffold(
       body: Container(
         color: Colors.white,

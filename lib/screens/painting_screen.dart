@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_paint/controllers/paintController.dart';
+import 'package:flutter_custom_paint/screens/paint_page.dart';
 import 'package:flutter_custom_paint/widgets/mobile_canvas.dart';
 import 'package:flutter_custom_paint/widgets/painting_bar_widget.dart';
 import 'package:get/get.dart';
@@ -94,8 +95,8 @@ class _PaintingPageState extends State<PaintingPage> {
           ),
           onPressed: () {
             this.setState(() {
-              MyApp.mylist
-                  .add(PaintingPage(Controller(), MyApp.mylist.length - 1));
+              PaintPage.mylist
+                  .add(PaintingPage(Controller(), PaintPage.mylist.length - 1));
             });
           }),
       IconButton(
@@ -108,7 +109,7 @@ class _PaintingPageState extends State<PaintingPage> {
   }
 
   Widget buttonBackward(height, width) {
-    return index != MyApp.mylist.length - 1 //* nút phải
+    return index != PaintPage.mylist.length - 1 //* nút phải
         ? Padding(
             padding: EdgeInsets.only(top: height * 0.4, left: width * 0.95),
             child: IconButton(
@@ -118,20 +119,21 @@ class _PaintingPageState extends State<PaintingPage> {
                   index = finalindex;
                   for (int i = 0;
                       i <
-                          MyApp.mylist[finalindex - 1].controller.filepath
+                          PaintPage.mylist[finalindex - 1].controller.filepath
                               .length;
                       i++) {
                     FilePath _filre =
-                        MyApp.mylist[finalindex - 1].controller.filepath[i];
-                    MyApp.mylist[finalindex].controller.paintss.add(new Paint()
-                      ..color = _filre.color
-                      ..style = PaintingStyle.stroke
-                      ..strokeJoin = StrokeJoin.round
-                      ..strokeCap = StrokeCap.round
-                      ..strokeWidth = _filre.strokeWidth);
+                        PaintPage.mylist[finalindex - 1].controller.filepath[i];
+                    PaintPage.mylist[finalindex].controller.paintss
+                        .add(new Paint()
+                          ..color = _filre.color
+                          ..style = PaintingStyle.stroke
+                          ..strokeJoin = StrokeJoin.round
+                          ..strokeCap = StrokeCap.round
+                          ..strokeWidth = _filre.strokeWidth);
                     Path path = Path();
                     path.lineTo(_filre.startPoint, _filre.endPoint);
-                    MyApp.mylist[finalindex].controller.paths.add(path);
+                    PaintPage.mylist[finalindex].controller.paths.add(path);
                   }
                   controllerPaintPage.update();
                   setState(() {});
@@ -189,7 +191,7 @@ class _PaintingPageState extends State<PaintingPage> {
                   child: GetBuilder<ControllerPaintPage>(
                     builder: (_) {
                       return CanvasPainting(
-                          MyApp.mylist[finalindex].controller);
+                          PaintPage.mylist[finalindex].controller);
                     },
                   ),
                 ),
@@ -206,7 +208,7 @@ class _PaintingPageState extends State<PaintingPage> {
                 color: Colors.black12,
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             child: Text(
-              '${(index + 1).toString()}/${MyApp.mylist.length.toString()}',
+              '${(index + 1).toString()}/${PaintPage.mylist.length.toString()}',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
