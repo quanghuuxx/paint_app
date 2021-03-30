@@ -116,23 +116,12 @@ class _PaintingPageState extends State<PaintingPage> {
                 onPressed: () {
                   finalindex++;
                   index = finalindex;
-                  for (int i = 0;
-                      i <
-                          MyApp.mylist[finalindex - 1].controller.filepath
-                              .length;
-                      i++) {
-                    FilePath _filre =
-                        MyApp.mylist[finalindex - 1].controller.filepath[i];
-                    MyApp.mylist[finalindex].controller.paintss.add(new Paint()
-                      ..color = _filre.color
-                      ..style = PaintingStyle.stroke
-                      ..strokeJoin = StrokeJoin.round
-                      ..strokeCap = StrokeCap.round
-                      ..strokeWidth = _filre.strokeWidth);
-                    Path path = Path();
-                    path.lineTo(_filre.startPoint, _filre.endPoint);
-                    MyApp.mylist[finalindex].controller.paths.add(path);
-                  }
+                  // test
+                  MyApp.mylist[finalindex].controller.filepath =
+                      MyApp.mylist[finalindex - 1].controller.filepath;
+                  //TODO: quan trọng ..setpath
+                  MyApp.mylist[finalindex].controller.setPath();
+                  //
                   controllerPaintPage.update();
                   setState(() {});
                 }))

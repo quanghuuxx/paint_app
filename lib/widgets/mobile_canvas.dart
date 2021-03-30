@@ -29,7 +29,6 @@ class _CanvasPaintingState extends State<CanvasPainting> {
 
   _CanvasPaintingState(this.controller) {
     controller.paths = [new Path()];
-
     Paint paint = new Paint()
       ..color = finalColor
       ..style = PaintingStyle.stroke
@@ -41,6 +40,7 @@ class _CanvasPaintingState extends State<CanvasPainting> {
 
   panDown(DragDownDetails details) {
     setState(() {
+      controller.filepath.add(List<FilePath>());
       _path = new Path();
       controller.paths.add(_path);
       RenderBox object = context.findRenderObject();
@@ -58,6 +58,12 @@ class _CanvasPaintingState extends State<CanvasPainting> {
         ..strokeCap = StrokeCap.round
         ..strokeWidth = finalSize;
       controller.paintss.add(paint);
+      //
+      controller.filepath.last.add(FilePath(
+          color: finalColor,
+          startPoint: _localPosition.dx - 10,
+          endPoint: _localPosition.dy - 5,
+          strokeWidth: finalSize));
 
       _repaint = true;
     });
@@ -86,7 +92,6 @@ class _CanvasPaintingState extends State<CanvasPainting> {
       // they use a lot of fingers
       double distance = distanceBetweenTwoPoints(
           _localPosition.dx, _localPosition.dy, fingerPostionX, fingerPostionY);
-
       // the distance between two fingers must be above 50
       // to disable multi touch
       if (distance > 50) {
@@ -100,18 +105,17 @@ class _CanvasPaintingState extends State<CanvasPainting> {
 
     setState(() {
       controller.paths.last.lineTo(fingerPostionX - 10.0, fingerPostionY - 5.0);
+      controller.filepath.last.add(FilePath(
+          color: finalColor,
+          startPoint: fingerPostionX - 10.0,
+          endPoint: fingerPostionY - 5.0,
+          strokeWidth: finalSize));
       //TODO: laasy toja do
     });
   }
 
   panEnd(DragEndDetails details) {
     setState(() {
-      controller.filepath.add(FilePath(
-          color: finalColor,
-          strokeWidth: finalSize,
-          startPoint: fingerPostionX - 10.0,
-          endPoint: fingerPostionY - 5.0));
-      print(controller.filepath.length);
       fingerPostionY = 0.0;
 //      _repaint = true;
     });
