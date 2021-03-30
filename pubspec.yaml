@@ -19,18 +19,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cloud_firestore: ^0.16.0+1
   cupertino_icons: ^0.1.2
+  firebase_core: ^0.7.0
   get: ^3.26.0
   get_storage: ^1.4.0
-  # vaid:
-  #   git:
-  #     url: https://trongtin045@bitbucket.org/vaway/vaid.git
-  # crypto: ^2.1.5
-  # device_info: ^2.0.0
-  # dio: ^3.0.10
-  # uuid: ^3.0.1
-  # url_launcher: ^6.0.2
-  # shared_preferences: ^2.0.3
 
 dev_dependencies:
   flutter_test:

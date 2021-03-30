@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class PaintingBar {
   Color selectedColor;
+
   PaintingBar(this.selectedColor);
+
   Widget colorContainer(Color color, Function() ontap) {
     return InkWell(
       onTap: ontap,

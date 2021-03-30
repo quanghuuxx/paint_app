@@ -45,26 +45,4 @@ class FilePath {
   String toString() {
     return 'FilePath(color: $color, strokeWidth: $strokeWidth, startPoint: $startPoint, endPoint: $endPoint)';
   }
-
-  Color getColor(int index) {
-    List<Color> _list = [
-      Colors.black,
-      Colors.blue,
-      Colors.red,
-    ];
-    return _list[index];
-  }
 }
-
-// cont.paintss.add(new Paint()
-//       ..color = Colors.black
-//       ..style = PaintingStyle.stroke
-//       ..strokeJoin = StrokeJoin.round
-//       ..strokeCap = StrokeCap.round
-//       ..strokeWidth = finalSize);
-//     //
-//     Path path = Path();
-//     path.lineTo(20, 50);
-//     cont.paths.add(path);
-//     //
-//     mylist.add(MyHomePage(cont, 2));

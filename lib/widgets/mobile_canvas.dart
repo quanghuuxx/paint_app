@@ -4,50 +4,44 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/path.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
-
-import '../controllers/paintController.dart';
+import '../controllers/paint_controller.dart';
 
 class CanvasPainting extends StatefulWidget {
   final Controller controller;
 
-  CanvasPainting(this.controller);
+  const CanvasPainting({Key key, this.controller}) : super(key: key);
 
   @override
-  _CanvasPaintingState createState() => _CanvasPaintingState(controller);
+  CanvasPaintingState createState() => CanvasPaintingState(controller);
 }
 
 Color finalColor = Colors.black;
 double finalSize = 2;
 
-class _CanvasPaintingState extends State<CanvasPainting> {
+class CanvasPaintingState extends State<CanvasPainting> {
   Controller controller;
   Path _path = new Path();
   bool _repaint = false;
   int back = 0;
 
-  GlobalKey globalKey = GlobalKey();
   Color activeColor = finalColor;
 
-  _CanvasPaintingState(this.controller) {
-    controller.paths = [new Path()];
+  CanvasPaintingState(this.controller);
 
-    Paint paint = new Paint()
-      ..color = finalColor
-      ..style = PaintingStyle.stroke
-      ..strokeJoin = StrokeJoin.round
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = finalSize;
-    controller.paintss.add(paint);
+  void update() {
+    setState(() {});
   }
 
   panDown(DragDownDetails details) {
     setState(() {
+      controller.filepath.add(List<FilePath>());
       _path = new Path();
       controller.paths.add(_path);
       RenderBox object = context.findRenderObject();
       Offset _localPosition = object.globalToLocal(details.globalPosition);
       controller.paths.last
           .moveTo(_localPosition.dx - 10, _localPosition.dy - 5);
+
       controller.paths.last
           .lineTo(_localPosition.dx - 10, _localPosition.dy - 5);
 
@@ -58,18 +52,24 @@ class _CanvasPaintingState extends State<CanvasPainting> {
         ..strokeCap = StrokeCap.round
         ..strokeWidth = finalSize;
       controller.paintss.add(paint);
+      //
+      controller.filepath.last.add(FilePath(
+          color: finalColor,
+          startPoint: _localPosition.dx - 10,
+          endPoint: _localPosition.dy - 5,
+          strokeWidth: finalSize));
 
       _repaint = true;
     });
   }
 
   var fingerPostionY = 0.0, fingerPostionX = 0.0;
+
   double distanceBetweenTwoPoints(double x1, double y1, double x2, double y2) {
     double x = x1 - x2;
     x = x * x;
     double y = y1 - y2;
     y = y * y;
-
     double result = x + y;
     return sqrt(result);
   }
@@ -86,7 +86,6 @@ class _CanvasPaintingState extends State<CanvasPainting> {
       // they use a lot of fingers
       double distance = distanceBetweenTwoPoints(
           _localPosition.dx, _localPosition.dy, fingerPostionX, fingerPostionY);
-
       // the distance between two fingers must be above 50
       // to disable multi touch
       if (distance > 50) {
@@ -100,21 +99,19 @@ class _CanvasPaintingState extends State<CanvasPainting> {
 
     setState(() {
       controller.paths.last.lineTo(fingerPostionX - 10.0, fingerPostionY - 5.0);
-      //TODO: laasy toja do
+      controller.filepath.last.add(FilePath(
+          color: finalColor,
+          startPoint: fingerPostionX - 10.0,
+          endPoint: fingerPostionY - 5.0,
+          strokeWidth: finalSize));
     });
   }
 
   panEnd(DragEndDetails details) {
-    setState(() {
-      controller.filepath.add(FilePath(
-          color: finalColor,
-          strokeWidth: finalSize,
-          startPoint: fingerPostionX - 10.0,
-          endPoint: fingerPostionY - 5.0));
-      print(controller.filepath.length);
-      fingerPostionY = 0.0;
+    // setState(() {
+    fingerPostionY = 0.0;
 //      _repaint = true;
-    });
+    // });
   }
 
   reset() {
@@ -137,16 +134,15 @@ class _CanvasPaintingState extends State<CanvasPainting> {
           onPanUpdate: (DragUpdateDetails details) => panUpdate(details),
           onPanEnd: (DragEndDetails details) => panEnd(details),
           child: RepaintBoundary(
-            key: globalKey,
             child: Stack(
               children: <Widget>[
                 CustomPaint(
-                  painter: new PathPainter(
-                      paths: controller.paths,
+                  painter: PathPainter(
+                      paths: PaintPage.mylist[finalindex].controller.paths,
                       repaint: _repaint,
-                      paints: controller.paintss),
+                      paints: PaintPage.mylist[finalindex].controller.paintss),
                   size: Size.infinite,
-                )
+                ),
               ],
             ),
           ),
@@ -161,6 +157,7 @@ class PathPainter extends CustomPainter {
   List<Paint> paints;
   bool repaint;
   int i = 0;
+
   PathPainter({this.paths, this.repaint, this.paints});
 
   @override

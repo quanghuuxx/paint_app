@@ -1,24 +1,27 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_custom_paint/configs/config_vaway.dart';
+import 'package:flutter_custom_paint/controllers/paint_controller.dart';
+import 'package:flutter_custom_paint/models/doc.dart';
+import 'package:flutter_custom_paint/models/request_firebase.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 //* biến Global
 int finalindex = 0;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
+
   //* chuyển màn hình ngang
   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
   ]);
-  await GetStorage.init();
   runApp(Launch());
 }
 
@@ -30,7 +33,16 @@ class Launch extends StatefulWidget {
 class _LaunchState extends State<Launch> {
   @override
   void initState() {
-    Timer(Duration(milliseconds: 1500), () => Get.off(PaintPage()));
+    Timer(Duration(milliseconds: 1500), () async {
+      Doc doc = await RequestFirebase.getDoc('TVTc0iskOtcx6lPknJBK');
+      for (int i = 0; i < doc.page.length; i++) {
+        Controller controller = Controller();
+        controller.setfilePath(doc.page[i]["listfilepath"]);
+        PaintPage.mylist.add(PaintingPage(controller, i));
+        PaintPage.mylist.last.controller.setPath();
+      }
+      Get.to(PaintPage());
+    });
     super.initState();
   }
 
@@ -72,30 +84,5 @@ class _LaunchState extends State<Launch> {
 //       },
 //       enableClose: false,
 //     );
-//   }
-// }
-
-// cont.paintss.add(new Paint()
-//       ..color = Colors.black
-//       ..style = PaintingStyle.stroke
-//       ..strokeJoin = StrokeJoin.round
-//       ..strokeCap = StrokeCap.round
-//       ..strokeWidth = finalSize);
-//     //
-//     Path path = Path();
-//     path.lineTo(20, 50);
-//     cont.paths.add(path);
-
-// List<PaintingPage> initList() {
-//   List<PaintingPage> _list;
-//   for (var i = 0; i < 2; i++) {
-//     Controller _controller = Controller();
-//     for (var i = 0; i < lenthPath; i++) {
-//       Path _path = new Path();
-//       _path.lineTo(pathx[i],pathx[i][0] )
-//       _controller.paths.add(_path);
-
-//     }
-//     _list.add(PaintingPage() , i)
 //   }
 // }
