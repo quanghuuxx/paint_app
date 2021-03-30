@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_custom_paint/main.dart';
 
-import 'controllers/paintController.dart';
+import '../controllers/paintController.dart';
 
 class CanvasPainting extends StatefulWidget {
   final Controller controller;
@@ -46,6 +46,7 @@ class _CanvasPaintingState extends State<CanvasPainting> {
       Offset _localPosition = object.globalToLocal(details.globalPosition);
       controller.paths.last
           .moveTo(_localPosition.dx - 10, _localPosition.dy - 5);
+
       controller.paths.last
           .lineTo(_localPosition.dx - 10, _localPosition.dy - 5);
 

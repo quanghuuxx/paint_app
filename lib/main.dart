@@ -22,8 +22,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static List<MyHomePage> mylist = [
-    MyHomePage(Controller(), 0),
+  static List<PaintingPage> mylist = [
+    PaintingPage(Controller(), 0),
     // MyHomePage(Controller(), 1),
   ];
 
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(MyApp.mylist[0].controller, finalindex),
+      home: PaintingPage(MyApp.mylist[0].controller, finalindex),
     );
   }
 }

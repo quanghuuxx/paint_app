@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_paint/controllers/paintController.dart';
-import 'package:flutter_custom_paint/mobile_canvas.dart';
+import 'package:flutter_custom_paint/widgets/mobile_canvas.dart';
 import 'package:flutter_custom_paint/widgets/painting_bar_widget.dart';
 import 'package:get/get.dart';
 
 import '../main.dart';
 
-class MyHomePage extends StatefulWidget {
+class PaintingPage extends StatefulWidget {
   final Controller controller;
   final int index;
   @override
-  MyHomePage(this.controller, this.index);
+  PaintingPage(this.controller, this.index);
   @override
-  _MyHomePageState createState() => _MyHomePageState(controller, index);
+  _PaintingPageState createState() => _PaintingPageState(controller, index);
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _PaintingPageState extends State<PaintingPage> {
   Controller controller;
   int index;
-  _MyHomePageState(this.controller, this.index);
+  _PaintingPageState(this.controller, this.index);
   Color selectedColor;
   double strokeWidth;
 
@@ -31,13 +31,6 @@ class _MyHomePageState extends State<MyHomePage> {
     strokeWidth = 2.0;
   }
 
-  // Container(
-  //         height: selectedColor == color ? 20 : 15,
-  //         width: selectedColor == color ? 20 : 15,
-  //         decoration: BoxDecoration(
-  //             color: color,
-  //             borderRadius: BorderRadius.all(Radius.circular(50))),
-  //       )
   List<Widget> listColor() {
     return [
       PaintingBar(selectedColor).colorContainer(
@@ -102,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () {
             this.setState(() {
               MyApp.mylist
-                  .add(MyHomePage(Controller(), MyApp.mylist.length - 1));
+                  .add(PaintingPage(Controller(), MyApp.mylist.length - 1));
             });
           }),
       IconButton(
@@ -147,6 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final ControllerPaintPage controllerPaintPage =
       Get.put(ControllerPaintPage());
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -176,6 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //* nút chuyển trang mới
           buttonBackward(height, width),
           buttonForWard(height, width),
+          //* SỐ TRANG
           Container(
             margin: EdgeInsets.only(left: width * 0.05, top: height * 0.05),
             padding: EdgeInsets.all(5),
