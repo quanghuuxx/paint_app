@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_custom_paint/main.dart';
+import 'package:flutter_custom_paint/models/path.dart';
 
 import '../controllers/paintController.dart';
 
@@ -99,11 +100,18 @@ class _CanvasPaintingState extends State<CanvasPainting> {
 
     setState(() {
       controller.paths.last.lineTo(fingerPostionX - 10.0, fingerPostionY - 5.0);
+      //TODO: laasy toja do
     });
   }
 
   panEnd(DragEndDetails details) {
     setState(() {
+      controller.filepath.add(FilePath(
+          color: finalColor,
+          strokeWidth: finalSize,
+          startPoint: fingerPostionX - 10.0,
+          endPoint: fingerPostionY - 5.0));
+      print(controller.filepath.length);
       fingerPostionY = 0.0;
 //      _repaint = true;
     });
