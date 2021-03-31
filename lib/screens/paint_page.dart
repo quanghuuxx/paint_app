@@ -1,32 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_custom_paint/controllers/paintController.dart';
+import 'package:flutter_custom_paint/controllers/paint_controller.dart';
+import 'package:flutter_custom_paint/main.dart';
+import 'package:flutter_custom_paint/models/request_firebase.dart';
 import 'package:flutter_custom_paint/widgets/mobile_canvas.dart';
 import 'package:flutter_custom_paint/widgets/painting_bar_widget.dart';
 import 'package:get/get.dart';
-import 'package:flutter_custom_paint/models/path.dart';
-import '../main.dart';
 
+class PaintPage extends StatelessWidget {
+  //* list các trang trong 1 doc
+  static List<PaintingPage> mylist = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body:
+          // GetBuilder<ControllerPaintPage>(
+          //   init: ControllerPaintPage(),
+          //   initState: (_) {},
+          //   builder: (_) {
+          mylist[finalindex] ?? PaintingPage(Controller(), 0),
+      // },
+      // ),
+    );
+  }
+}
+
+//* các trang
 class PaintingPage extends StatefulWidget {
   final Controller controller;
   final int index;
+
   @override
   PaintingPage(this.controller, this.index);
+
   @override
-  _PaintingPageState createState() => _PaintingPageState(controller, index);
+  _PaintingPageState createState() => _PaintingPageState(index);
 }
 
 class _PaintingPageState extends State<PaintingPage> {
-  Controller controller;
   int index;
-  _PaintingPageState(this.controller, this.index);
+  _PaintingPageState(this.index);
   Color selectedColor;
   double strokeWidth;
+  final GlobalKey<CanvasPaintingState> _key = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     selectedColor = Colors.black;
     strokeWidth = 2.0;
   }
@@ -69,8 +89,15 @@ class _PaintingPageState extends State<PaintingPage> {
   List<Widget> listChosingBar(width, height) {
     return [
       Padding(padding: EdgeInsets.all(5)),
+      //* button Xoá
       InkWell(
-          onTap: () {},
+          onTap: () {
+            PaintPage.mylist[finalindex].controller.paths.clear();
+            PaintPage.mylist[finalindex].controller.filepath.clear();
+            PaintPage.mylist[finalindex].controller.paintss.clear();
+            controllerPaintPage.update();
+            setState(() {});
+          },
           child: Container(
             height: 30,
             width: 30,
@@ -94,8 +121,8 @@ class _PaintingPageState extends State<PaintingPage> {
           ),
           onPressed: () {
             this.setState(() {
-              MyApp.mylist
-                  .add(PaintingPage(Controller(), MyApp.mylist.length - 1));
+              PaintPage.mylist
+                  .add(PaintingPage(Controller(), PaintPage.mylist.length - 1));
             });
           }),
       IconButton(
@@ -103,12 +130,15 @@ class _PaintingPageState extends State<PaintingPage> {
             Icons.save,
             color: Colors.black,
           ),
-          onPressed: () async {}),
+          onPressed: () async {
+            Map<String, dynamic> map = Controller().setMap();
+            RequestFirebase.addDoc(map);
+          }),
     ];
   }
 
   Widget buttonBackward(height, width) {
-    return index != MyApp.mylist.length - 1 //* nút phải
+    return index != PaintPage.mylist.length - 1 //* nút phải
         ? Padding(
             padding: EdgeInsets.only(top: height * 0.4, left: width * 0.95),
             child: IconButton(
@@ -116,30 +146,12 @@ class _PaintingPageState extends State<PaintingPage> {
                 onPressed: () {
                   finalindex++;
                   index = finalindex;
-                  // test
-                  MyApp.mylist[finalindex].controller.filepath =
-                      MyApp.mylist[finalindex - 1].controller.filepath;
-                  //TODO: quan trọng ..setpath
-                  MyApp.mylist[finalindex].controller.setPath();
-                  //
-                  controllerPaintPage.update();
+                  //controllerPaintPage.update();
+                  _key.currentState.update();
                   setState(() {});
                 }))
         : Container();
   }
-
-  // cont.paintss.add(new Paint()
-  //     ..color = Colors.black
-  //     ..style = PaintingStyle.stroke
-  //     ..strokeJoin = StrokeJoin.round
-  //     ..strokeCap = StrokeCap.round
-  //     ..strokeWidth = finalSize);
-  //   //
-  //   Path path = Path();
-  //   path.lineTo(20, 50);
-  //   cont.paths.add(path);
-  //   //
-  //   mylist.add(MyHomePage(cont, 2));
 
   Widget buttonForWard(height, width) {
     return index != 0 //* nút trái
@@ -150,11 +162,11 @@ class _PaintingPageState extends State<PaintingPage> {
                 onPressed: () {
                   finalindex--;
                   index = finalindex;
-                  controllerPaintPage.update();
+                  //controllerPaintPage.update();
+                  _key.currentState.update();
                   setState(() {});
                 }))
         : Container();
-    //* Số Trang
   }
 
   final ControllerPaintPage controllerPaintPage =
@@ -174,15 +186,11 @@ class _PaintingPageState extends State<PaintingPage> {
               children: <Widget>[
                 //* Vùng dùng để vẽ
                 Container(
-                  width: width,
-                  height: height,
-                  child: GetBuilder<ControllerPaintPage>(
-                    builder: (_) {
-                      return CanvasPainting(
-                          MyApp.mylist[finalindex].controller);
-                    },
-                  ),
-                ),
+                    width: width,
+                    height: height,
+                    child: CanvasPainting(
+                        key: _key,
+                        controller: PaintPage.mylist[finalindex].controller)),
               ],
             ),
           ),
@@ -197,7 +205,7 @@ class _PaintingPageState extends State<PaintingPage> {
                 color: Colors.black12,
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             child: Text(
-              '${(index + 1).toString()}/${MyApp.mylist.length.toString()}',
+              '${(index + 1).toString()}/${PaintPage.mylist.length.toString()}',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -267,5 +275,33 @@ class _PaintingPageState extends State<PaintingPage> {
         ),
       ),
     );
+  }
+
+  dialogEraser(width, height) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return Container(
+            width: width * 0.9,
+            child: Padding(
+              padding: EdgeInsets.only(left: width * 0.7, bottom: height * 0.5),
+              child: Dialog(
+                backgroundColor: Colors.white,
+                child: Container(
+                  height: height * 0.9,
+                  width: width * 0.7,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      penitem(selectedColor, 2),
+                      penitem(selectedColor, 5),
+                      penitem(selectedColor, 7),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 }

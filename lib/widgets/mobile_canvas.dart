@@ -3,39 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/path.dart';
-
-import '../controllers/paintController.dart';
+import 'package:flutter_custom_paint/screens/paint_page.dart';
+import '../controllers/paint_controller.dart';
 
 class CanvasPainting extends StatefulWidget {
   final Controller controller;
 
-  CanvasPainting(this.controller);
+  const CanvasPainting({Key key, this.controller}) : super(key: key);
 
   @override
-  _CanvasPaintingState createState() => _CanvasPaintingState(controller);
+  CanvasPaintingState createState() => CanvasPaintingState(controller);
 }
 
 Color finalColor = Colors.black;
 double finalSize = 2;
 
-class _CanvasPaintingState extends State<CanvasPainting> {
+class CanvasPaintingState extends State<CanvasPainting> {
   Controller controller;
   Path _path = new Path();
   bool _repaint = false;
   int back = 0;
 
-  GlobalKey globalKey = GlobalKey();
   Color activeColor = finalColor;
 
-  _CanvasPaintingState(this.controller) {
-    controller.paths = [new Path()];
-    Paint paint = new Paint()
-      ..color = finalColor
-      ..style = PaintingStyle.stroke
-      ..strokeJoin = StrokeJoin.round
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = finalSize;
-    controller.paintss.add(paint);
+  CanvasPaintingState(this.controller);
+
+  void update() {
+    panDown(DragDownDetails());
+    //panEnd(DragEndDetails());
   }
 
   panDown(DragDownDetails details) {
@@ -70,12 +65,12 @@ class _CanvasPaintingState extends State<CanvasPainting> {
   }
 
   var fingerPostionY = 0.0, fingerPostionX = 0.0;
+
   double distanceBetweenTwoPoints(double x1, double y1, double x2, double y2) {
     double x = x1 - x2;
     x = x * x;
     double y = y1 - y2;
     y = y * y;
-
     double result = x + y;
     return sqrt(result);
   }
@@ -110,7 +105,6 @@ class _CanvasPaintingState extends State<CanvasPainting> {
           startPoint: fingerPostionX - 10.0,
           endPoint: fingerPostionY - 5.0,
           strokeWidth: finalSize));
-      //TODO: laasy toja do
     });
   }
 
@@ -132,7 +126,7 @@ class _CanvasPaintingState extends State<CanvasPainting> {
 
   @override
   Widget build(BuildContext context) {
-    controller = MyApp.mylist[finalindex].controller;
+    controller = PaintPage.mylist[finalindex].controller;
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -141,16 +135,15 @@ class _CanvasPaintingState extends State<CanvasPainting> {
           onPanUpdate: (DragUpdateDetails details) => panUpdate(details),
           onPanEnd: (DragEndDetails details) => panEnd(details),
           child: RepaintBoundary(
-            key: globalKey,
             child: Stack(
               children: <Widget>[
                 CustomPaint(
-                  painter: new PathPainter(
+                  painter: PathPainter(
                       paths: controller.paths,
                       repaint: _repaint,
                       paints: controller.paintss),
                   size: Size.infinite,
-                )
+                ),
               ],
             ),
           ),
@@ -165,6 +158,7 @@ class PathPainter extends CustomPainter {
   List<Paint> paints;
   bool repaint;
   int i = 0;
+
   PathPainter({this.paths, this.repaint, this.paints});
 
   @override
@@ -173,7 +167,6 @@ class PathPainter extends CustomPainter {
       canvas.drawPath(path, paints[i]);
       ++i;
     });
-
     i = 0;
     repaint = false;
   }
