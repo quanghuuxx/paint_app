@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "512098559559",
+    "project_id": "paint-app-b64c1",
+    "storage_bucket": "paint-app-b64c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512098559559:android:addae2f6c205400898f362",
+        "android_client_info": {
+          "package_name": "com.retroportalstudio.flutter_custom_paint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "512098559559-7tlfbjtm533h71qcvgm0km9cq2ku2iuo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQlmS3ff4QSXxCJC54JXcpIN6XSHlzbX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "512098559559-7tlfbjtm533h71qcvgm0km9cq2ku2iuo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

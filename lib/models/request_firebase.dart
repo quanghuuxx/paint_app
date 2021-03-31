@@ -5,17 +5,40 @@ class RequestFirebase {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   static CollectionReference doc = FirebaseFirestore.instance.collection('doc');
 
-  static Future<void> addDoc(Map<String, dynamic> map) {
+  static Future<bool> addDoc(Map<String, dynamic> map) {
+    return doc.add(map).then((value) => true).catchError((error) {
+      print("Failed to add doc: $error");
+      return false;
+    });
+  }
+
+  static Query getAllDoc() {
     return doc
-        .add(map)
-        .then((value) => print("Doc Added"))
-        .catchError((error) => print("Failed to add doc: $error"));
+        .where('token', isEqualTo: 'ABC')
+        .orderBy('name', descending: false);
   }
 
   static Future<Doc> getDoc(String id) {
     return doc.doc(id).get().then((value) {
-      final doc = Doc.fromMap(value.data());
+      final doc = Doc.formDocumentSnapShot(value);
       return doc;
+    }).catchError((error) {
+      print("Failed to get doc: $error");
+      return new Doc();
+    });
+  }
+
+  static Future<bool> deleteDoc(String id) {
+    return doc.doc(id).delete().then((value) => true).catchError((error) {
+      print("Failed to delete doc: $error");
+      return false;
+    });
+  }
+
+  static Future<bool> updateDoc(String id, Map<String, dynamic> map) {
+    return doc.doc(id).update(map).then((value) => true).catchError((error) {
+      print("Failed to update doc: $error");
+      return false;
     });
   }
 }
