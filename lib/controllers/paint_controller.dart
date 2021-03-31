@@ -18,25 +18,24 @@ class Controller {
   bool isDeleteAll = false;
 
   setRemoveAllData() {
-    List<Path> tempremovedPaths = new List<Path>();
-    List<Paint> tempremovedPaints = new List<Paint>();
-    List<List<FilePath>> tempremovedFilePaths = [];
-    removedPaths = paths;
-    removedPaints = paintss;
-    removedFilePaths = filepath;
+    for (int i = 0; i < paths.length; i++) {
+      removedPaths.add(paths[i]);
+      removedPaints.add(paintss[i]);
+      removedFilePaths.add(filepath[i]);
+    }
 
     paths.clear();
     paintss.clear();
     filepath.clear();
-    print(removedPaths);
     isDeleteAll = true;
   }
 
   unDoallPage() {
-    paths = removedPaths;
-    paintss = removedPaints;
-    filepath = removedFilePaths;
-
+    for (int i = 0; i < removedFilePaths.length; i++) {
+      paths.add(removedPaths[i]);
+      paintss.add(removedPaints[i]);
+      filepath.add(removedFilePaths[i]);
+    }
     print(paths);
     removedFilePaths.clear();
     removedPaints.clear();
@@ -59,7 +58,6 @@ class Controller {
   }
 
   undo() {
-    print(removedFilePaths.length);
     if (removedPaths.length > 0) {
       if (isDeleteAll)
         unDoallPage();
