@@ -4,6 +4,7 @@ import 'package:flutter_custom_paint/controllers/paint_controller.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/doc.dart';
 import 'package:flutter_custom_paint/models/request_firebase.dart';
+import 'package:flutter_custom_paint/widgets/eraser_widget.dart';
 import 'package:flutter_custom_paint/widgets/mobile_canvas.dart';
 import 'package:flutter_custom_paint/widgets/painting_bar_widget.dart';
 import 'package:flutter_custom_paint/widgets/widget_show_notifi.dart';
@@ -38,7 +39,6 @@ class PaintPage extends StatelessWidget {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-
     return Scaffold(
       body: mylist[finalindex] ?? PaintingPage(Controller(), 0),
     );
@@ -62,6 +62,9 @@ class _PaintingPageState extends State<PaintingPage> {
   _PaintingPageState(this.index);
   Color selectedColor;
   double strokeWidth;
+  bool showMore = false;
+  double leftPadding = 0.65;
+  final GlobalKey<CanvasPaintingState> _key = GlobalKey();
 
   @override
   void initState() {
@@ -70,263 +73,116 @@ class _PaintingPageState extends State<PaintingPage> {
     strokeWidth = 2.0;
   }
 
-  final ControllerPaintPage controllerPaintPage =
-      Get.put(ControllerPaintPage());
-
-  @override
-  Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                //* Vùng dùng để vẽ
-                Container(
-                  width: width,
-                  height: height,
-                  child: GetBuilder<ControllerPaintPage>(
-                    builder: (_) {
-                      return CanvasPainting(
-                          controller: PaintPage.mylist[finalindex].controller);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          //* nút chuyển trang
-          buttonForward(height, width),
-          buttonBackWard(height, width),
-          //* nút quay lại trang chủ
-          Container(
-              height: Get.height * 0.1,
-              width: Get.width * 0.05,
-              margin: EdgeInsets.only(left: width * 0.015, top: height * 0.03),
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  color: Colors.black12,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: IconButton(
-                padding: EdgeInsets.all(0),
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 15,
-                ),
-                onPressed: () {
-                  SystemChrome.setEnabledSystemUIOverlays(
-                      [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown,
-                  ]);
-                  Get.back();
-                },
-              )),
-          //* SỐ TRANG
-          Container(
-            margin: EdgeInsets.only(left: width * 0.5, top: height * 0.03),
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                color: Colors.black12,
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: Text(
-              '${(index + 1).toString()}/${PaintPage.mylist.length.toString()}',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          //* thanh trên đầu
-          Padding(
-            padding: EdgeInsets.only(left: width * 0.65, top: height * 0.02),
-            child: Container(
-              padding: EdgeInsets.all(5),
-              width: width * 0.5,
-              height: height * 0.1,
-              decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.9),
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              child:
-                  Row(children: listColor() + listChooseingBar(width, height)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  //* Menu kích cỡ nét viết
-  dialogPenSizeChoose(double width, double height) {
-    showDialog(
-        context: context,
-        builder: (builder) {
-          return Container(
-            width: width * 0.9,
-            child: Padding(
-              padding:
-                  EdgeInsets.only(left: width * 0.75, bottom: height * 0.5),
-              child: Dialog(
-                backgroundColor: Colors.white,
-                child: Container(
-                  height: height * 0.9,
-                  width: width * 0.7,
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      _penItem(selectedColor, 2),
-                      _penItem(selectedColor, 5),
-                      _penItem(selectedColor, 7),
-                      _penItem(selectedColor, 10),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
-  }
-
-  //* Menu 3 màu
   List<Widget> listColor() {
     return [
-      PaintingBar(selectedColor).colorContainer(
-        Colors.black,
-        () {
-          selectedColor = Colors.black;
-          finalColor = selectedColor;
-          setState(() {});
-        },
+      PaintingBar.butonUndo(() {
+        _key.currentState.update();
+      }),
+      PaintingBar.butonRedo(() {
+        _key.currentState.update();
+      }),
+      Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: PaintingBar(selectedColor).colorContainer(
+          Colors.black,
+          () {
+            selectedColor = Colors.black;
+            finalColor = selectedColor;
+            finalSize = EraserWidget.finaltempSize;
+            EraserWidget.isErasrering = false;
+            setState(() {});
+          },
+        ),
       ),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.all(4.0),
         child: PaintingBar(selectedColor).colorContainer(
           Colors.blue,
           () {
             selectedColor = Colors.blue;
             finalColor = selectedColor;
+            finalSize = EraserWidget.finaltempSize;
+            EraserWidget.isErasrering = false;
             setState(() {});
           },
         ),
       ),
-      PaintingBar(selectedColor).colorContainer(
-        Colors.red,
-        () {
-          selectedColor = Colors.red;
-          finalColor = selectedColor;
-          setState(() {});
-        },
+      Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: PaintingBar(selectedColor).colorContainer(
+          Colors.red,
+          () {
+            selectedColor = Colors.red;
+            finalColor = selectedColor;
+            finalSize = EraserWidget.finaltempSize;
+            EraserWidget.isErasrering = false;
+            setState(() {});
+          },
+        ),
       )
     ];
   }
 
-  //* nút sang phải
-  Widget buttonForward(height, width) {
-    return index != PaintPage.mylist.length - 1
-        ? Padding(
-            padding: EdgeInsets.only(top: height * 0.4, left: width * 0.95),
-            child: IconButton(
-                icon: Icon(Icons.arrow_forward_ios),
-                onPressed: () {
-                  finalindex++;
-                  index = finalindex;
-                  controllerPaintPage.update();
-                  setState(() {});
-                }))
-        : Container();
+  ///container animate
+  Widget animatedContainer(
+      bool condition, firstchild, secondchild, durationSecond) {
+    return AnimatedCrossFade(
+        firstCurve: Curves.easeInToLinear,
+        secondCurve: Curves.easeInToLinear,
+        duration: Duration(milliseconds: 500),
+        crossFadeState:
+            condition ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        firstChild: firstchild,
+        secondChild: secondchild);
   }
 
-  //* nút sang trái
-  Widget buttonBackWard(height, width) {
-    return index != 0
-        ? Padding(
-            padding: EdgeInsets.only(top: height * 0.4, left: width * 0),
-            child: IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  finalindex--;
-                  index = finalindex;
-                  controllerPaintPage.update();
-                  setState(() {});
-                }))
-        : Container();
-  }
-
-  Widget _penItem(Color color, double size) {
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: InkWell(
-        onTap: () {
-          finalSize = size;
-          Navigator.of(context).pop();
-        },
-        child: Container(
-          height: 20,
-          child: Center(
-            child: Container(
-              height: size,
-              color: color,
-            ),
-          ),
+  Widget menuRow() {
+    return Row(
+      children: [
+        //* button pen
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: InkWell(
+              onTap: () {
+                dialogPenchose(context.width, context.height);
+              },
+              child: Container(
+                height: 30,
+                width: 30,
+                child: Icon(
+                  Icons.border_color,
+                  size: 20,
+                ),
+              )),
         ),
-      ),
+        //* button +
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: InkWell(
+              child: Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
+              onTap: () {
+                this.setState(() {
+                  PaintPage.mylist.add(
+                      PaintingPage(Controller(), PaintPage.mylist.length - 1));
+                });
+              }),
+        ),
+        //* button lưu
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: InkWell(
+              child: Icon(
+                Icons.save,
+                color: Colors.black,
+              ),
+              onTap: addNew),
+        ),
+        //* button menu show
+      ],
     );
-  }
-
-  List<Widget> listChooseingBar(width, height) {
-    return [
-      Padding(padding: EdgeInsets.all(5)),
-      //* button Xoá
-      InkWell(
-          onTap: () {
-            PaintPage.mylist[finalindex].controller.paths.clear();
-            PaintPage.mylist[finalindex].controller.filepath.clear();
-            PaintPage.mylist[finalindex].controller.paintss.clear();
-            controllerPaintPage.update();
-            setState(() {});
-          },
-          child: Container(
-            height: 30,
-            width: 30,
-            child: Image.asset(
-              'assets/images/eraser.png',
-              color: Colors.grey,
-            ),
-          )),
-      Padding(padding: EdgeInsets.all(5)),
-      //* button PenSize
-      InkWell(
-          onTap: () {
-            dialogPenSizeChoose(width, height);
-          },
-          child: Container(
-            height: 30,
-            width: 30,
-            child: Icon(Icons.border_color),
-          )),
-      //* button thêm trang mới
-      IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            this.setState(() {
-              PaintPage.mylist
-                  .add(PaintingPage(Controller(), PaintPage.mylist.length - 1));
-            });
-          }),
-      //* button Save
-      IconButton(
-        icon: Icon(
-          Icons.save,
-          color: Colors.black,
-        ),
-        onPressed: addNew,
-      ),
-    ];
   }
 
   void addNew() async {
@@ -393,8 +249,240 @@ class _PaintingPageState extends State<PaintingPage> {
             : "Thất Bại ! Có Lỗi Gì Đó !");
   }
 
+  List<Widget> listChosingBar(width, height) {
+    return [
+      //* button Xoá
+      InkWell(
+        onTap: () {
+          EraserWidget.eraserDialog(context, width, height, () {
+            _key.currentState.update();
+          });
+        },
+        child: Container(
+          height: 28,
+          width: 28,
+          child: Image.asset(
+            'assets/images/eraser.png',
+            color: Colors.grey,
+          ),
+        ),
+      ),
+      animatedContainer(
+          showMore,
+          Container(),
+          Container(
+            child: menuRow(),
+          ),
+          1),
+      IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            showMore = !showMore;
+            if (showMore)
+              leftPadding = 0.55;
+            else
+              leftPadding = 0.65;
+            setState(() {});
+          })
+    ];
+  }
+
+  Widget buttonBackward(height, width) {
+    return index != PaintPage.mylist.length - 1 //* nút phải
+        ? Padding(
+            padding: EdgeInsets.only(top: height * 0.4, left: width * 0.95),
+            child: IconButton(
+                icon: Icon(Icons.arrow_forward_ios),
+                onPressed: () {
+                  finalindex++;
+                  index = finalindex;
+                  _key.currentState.update();
+                  setState(() {});
+                }))
+        : Container();
+  }
+
+  Widget buttonForWard(height, width) {
+    return index != 0 //* nút trái
+        ? Padding(
+            padding: EdgeInsets.only(top: height * 0.4, left: width * 0),
+            child: IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  finalindex--;
+                  index = finalindex;
+                  _key.currentState.update();
+                  setState(() {});
+                }))
+        : Container();
+  }
+
+  final ControllerPaintPage controllerPaintPage =
+      Get.put(ControllerPaintPage());
+
   @override
-  void dispose() {
-    super.dispose();
+  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                //* Vùng dùng để vẽ
+                Container(
+                    width: width,
+                    height: height,
+                    child: GetBuilder<ControllerPaintPage>(
+                      builder: (_) {
+                        return CanvasPainting(
+                            key: _key,
+                            controller:
+                                PaintPage.mylist[finalindex].controller);
+                      },
+                    )),
+              ],
+            ),
+          ),
+
+          Container(
+              height: Get.height * 0.1,
+              width: Get.width * 0.05,
+              margin: EdgeInsets.only(left: width * 0.015, top: height * 0.03),
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: IconButton(
+                padding: EdgeInsets.all(0),
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 15,
+                ),
+                onPressed: () {
+                  SystemChrome.setEnabledSystemUIOverlays(
+                      [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.portraitDown,
+                  ]);
+                  Get.back();
+                },
+              )),
+          //* nút chuyển trang mới
+          buttonBackward(height, width),
+          buttonForWard(height, width),
+          //* SỐ TRANG
+          Container(
+            margin: EdgeInsets.only(left: width * 0.015, top: height * 0.9),
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+                color: Colors.black12,
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            child: Text(
+              '${(index + 1).toString()}/${PaintPage.mylist.length.toString()}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          //* thanh trên đầu
+          Padding(
+            padding:
+                EdgeInsets.only(left: width * leftPadding, top: height * 0.02),
+            child: Container(
+              width: width * 0.5,
+              height: height * 0.1,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              child: Row(
+                children: listColor() + listChosingBar(width, height),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //* Menu kích cỡ nét viết
+  dialogPenchose(double width, double height) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return Container(
+            width: width * 0.9,
+            child: Padding(
+              padding:
+                  EdgeInsets.only(left: width * 0.75, bottom: height * 0.5),
+              child: Dialog(
+                backgroundColor: Colors.white,
+                child: Container(
+                  height: height * 0.9,
+                  width: width * 0.7,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      penitem(selectedColor, 2),
+                      penitem(selectedColor, 5),
+                      penitem(selectedColor, 7),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget penitem(Color color, double size) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: InkWell(
+        onTap: () {
+          // strokeWidth = size;
+          finalSize = size;
+          Navigator.of(context).pop();
+        },
+        child: Container(
+          height: 20,
+          child: Center(
+            child: Container(
+              height: size,
+              color: color,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  dialogEraser(width, height) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return Container(
+            width: width * 0.9,
+            child: Padding(
+              padding: EdgeInsets.only(left: width * 0.7, bottom: height * 0.5),
+              child: Dialog(
+                backgroundColor: Colors.white,
+                child: Container(
+                  height: height * 0.9,
+                  width: width * 0.7,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      penitem(selectedColor, 2),
+                      penitem(selectedColor, 5),
+                      penitem(selectedColor, 7),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 }

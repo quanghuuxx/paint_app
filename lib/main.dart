@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 //* biến Global
 int finalindex = 0;
-
+bool isOpened = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();

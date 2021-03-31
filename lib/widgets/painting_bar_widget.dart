@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_paint/main.dart';
+import 'package:flutter_custom_paint/screens/paint_page.dart';
 
 class PaintingBar {
   Color selectedColor;
@@ -22,5 +24,23 @@ class PaintingBar {
         ),
       ),
     );
+  }
+
+  static Widget butonRedo(Function() paintPageUpdate) {
+    return IconButton(
+        icon: Icon(Icons.redo),
+        onPressed: () {
+          PaintPage.mylist[finalindex].controller.reDo();
+          paintPageUpdate();
+        });
+  }
+
+  static Widget butonUndo(Function() paintPageUpdate) {
+    return IconButton(
+        icon: Icon(Icons.undo),
+        onPressed: () {
+          PaintPage.mylist[finalindex].controller.undo();
+          paintPageUpdate();
+        });
   }
 }

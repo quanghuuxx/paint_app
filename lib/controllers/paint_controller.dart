@@ -11,6 +11,68 @@ class Controller {
   List<Paint> paintss = new List<Paint>();
   List<List<FilePath>> filepath = [];
 
+  List<Path> removedPaths = new List<Path>();
+  List<Paint> removedPaints = new List<Paint>();
+  List<List<FilePath>> removedFilePaths = [];
+
+  bool isDeleteAll = false;
+
+  setRemoveAllData() {
+    for (int i = 0; i < paths.length; i++) {
+      removedPaths.add(paths[i]);
+      removedPaints.add(paintss[i]);
+      removedFilePaths.add(filepath[i]);
+    }
+
+    paths.clear();
+    paintss.clear();
+    filepath.clear();
+    isDeleteAll = true;
+  }
+
+  unDoallPage() {
+    for (int i = removedFilePaths.length - 1; i > 0; i++) {
+      paths.add(removedPaths[i]);
+      paintss.add(removedPaints[i]);
+      filepath.add(removedFilePaths[i]);
+    }
+    print(paths);
+    removedFilePaths.clear();
+    removedPaints.clear();
+    removedPaths.clear();
+  }
+
+  reDo() {
+    if (paintss.length > 0) {
+      //LƯU THONG TIN XÓA
+      removedPaths.add(paths.last);
+      removedPaints.add(paintss.last);
+      removedFilePaths.add(filepath.last);
+      //xóa
+      paintss.removeLast();
+      paths.removeLast();
+      filepath.removeLast();
+    }
+  }
+
+  undo() {
+    if (removedPaths.length > 0) {
+      if (isDeleteAll) {
+        // unDoallPage();
+        isDeleteAll = false;
+      } else {
+        //khôi phục xóa từ thùng rác
+        paintss.add(removedPaints.last);
+        paths.add(removedPaths.last);
+        filepath.add(removedFilePaths.last);
+        //xóa trong mảng thùng rác
+        removedPaints.removeLast();
+        removedPaths.removeLast();
+        removedFilePaths.removeLast();
+      }
+    }
+  }
+
   setPath() {
     for (int i = 0; i < filepath.length; i++) {
       Path newPath = Path();
@@ -19,7 +81,6 @@ class Controller {
       pain.strokeJoin = StrokeJoin.round;
       pain.strokeCap = StrokeCap.round;
       pain.color = filepath[i][0].color;
-
       pain.strokeWidth = filepath[i][0].strokeWidth;
       for (int j = 0; j < filepath[i].length; j++) {
         if (j == 0) {
@@ -27,7 +88,6 @@ class Controller {
         }
         newPath.lineTo(filepath[i][j].startPoint, filepath[i][j].endPoint);
       }
-
       paintss.add(pain);
       paths.add(newPath);
     }

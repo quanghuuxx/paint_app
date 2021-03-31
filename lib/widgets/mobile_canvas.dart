@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/path.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
+import 'package:get/get.dart';
 import '../controllers/paint_controller.dart';
 
 class CanvasPainting extends StatefulWidget {
@@ -29,7 +30,13 @@ class CanvasPaintingState extends State<CanvasPainting> {
   CanvasPaintingState(this.controller);
 
   void update() {
-    setState(() {});
+    if (isOpened == false) {
+      panDown(DragDownDetails());
+      isOpened = true;
+    } else {
+      Get.find<ControllerPaintPage>().update();
+    }
+    //panEnd(DragEndDetails());
   }
 
   panDown(DragDownDetails details) {
@@ -39,11 +46,9 @@ class CanvasPaintingState extends State<CanvasPainting> {
       controller.paths.add(_path);
       RenderBox object = context.findRenderObject();
       Offset _localPosition = object.globalToLocal(details.globalPosition);
-      controller.paths.last
-          .moveTo(_localPosition.dx - 10, _localPosition.dy - 5);
+      controller.paths.last.moveTo(_localPosition.dx, _localPosition.dy);
 
-      controller.paths.last
-          .lineTo(_localPosition.dx - 10, _localPosition.dy - 5);
+      controller.paths.last.lineTo(_localPosition.dx, _localPosition.dy);
 
       Paint paint = new Paint()
         ..color = finalColor
@@ -55,8 +60,8 @@ class CanvasPaintingState extends State<CanvasPainting> {
       //
       controller.filepath.last.add(FilePath(
           color: finalColor,
-          startPoint: _localPosition.dx - 10,
-          endPoint: _localPosition.dy - 5,
+          startPoint: _localPosition.dx,
+          endPoint: _localPosition.dy,
           strokeWidth: finalSize));
 
       _repaint = true;
@@ -98,11 +103,11 @@ class CanvasPaintingState extends State<CanvasPainting> {
     fingerPostionX = _localPosition.dx;
 
     setState(() {
-      controller.paths.last.lineTo(fingerPostionX - 10.0, fingerPostionY - 5.0);
+      controller.paths.last.lineTo(fingerPostionX, fingerPostionY);
       controller.filepath.last.add(FilePath(
           color: finalColor,
-          startPoint: fingerPostionX - 10.0,
-          endPoint: fingerPostionY - 5.0,
+          startPoint: fingerPostionX,
+          endPoint: fingerPostionY,
           strokeWidth: finalSize));
     });
   }
@@ -138,7 +143,7 @@ class CanvasPaintingState extends State<CanvasPainting> {
               children: <Widget>[
                 CustomPaint(
                   painter: PathPainter(
-                      paths: PaintPage.mylist[finalindex].controller.paths,
+                      paths: controller.paths,
                       repaint: _repaint,
                       paints: PaintPage.mylist[finalindex].controller.paintss),
                   size: Size.infinite,
@@ -166,7 +171,6 @@ class PathPainter extends CustomPainter {
       canvas.drawPath(path, paints[i]);
       ++i;
     });
-
     i = 0;
     repaint = false;
   }
