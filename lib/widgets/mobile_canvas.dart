@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/path.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
+import 'package:get/get.dart';
 import '../controllers/paint_controller.dart';
 
 class CanvasPainting extends StatefulWidget {
@@ -29,7 +30,15 @@ class CanvasPaintingState extends State<CanvasPainting> {
   CanvasPaintingState(this.controller);
 
   void update() {
-    panDown(DragDownDetails());
+    if (isOpened == false) {
+      panDown(DragDownDetails());
+      // PaintPage.mylist[finalindex].controller.paintss.removeLast();
+      // PaintPage.mylist[finalindex].controller.paths.removeLast();
+      // PaintPage.mylist[finalindex].controller.filepath.removeLast();
+      isOpened = true;
+    } else {
+      Get.find<ControllerPaintPage>().update();
+    }
     //panEnd(DragEndDetails());
   }
 

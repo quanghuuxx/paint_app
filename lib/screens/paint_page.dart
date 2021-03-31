@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_paint/controllers/paint_controller.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/request_firebase.dart';
+import 'package:flutter_custom_paint/widgets/eraser_widget.dart';
 import 'package:flutter_custom_paint/widgets/mobile_canvas.dart';
 import 'package:flutter_custom_paint/widgets/painting_bar_widget.dart';
 import 'package:get/get.dart';
@@ -53,11 +54,19 @@ class _PaintingPageState extends State<PaintingPage> {
 
   List<Widget> listColor() {
     return [
+      PaintingBar.butonUndo(() {
+        _key.currentState.update();
+      }),
+      PaintingBar.butonRedo(() {
+        _key.currentState.update();
+        //controllerPaintPage.update();
+      }),
       PaintingBar(selectedColor).colorContainer(
         Colors.black,
         () {
           selectedColor = Colors.black;
           finalColor = selectedColor;
+          finalSize = EraserWidget.finaltempSize;
           setState(() {});
         },
       ),
@@ -69,6 +78,7 @@ class _PaintingPageState extends State<PaintingPage> {
         () {
           selectedColor = Colors.blue;
           finalColor = selectedColor;
+          finalSize = EraserWidget.finaltempSize;
           setState(() {});
         },
       ),
@@ -80,6 +90,7 @@ class _PaintingPageState extends State<PaintingPage> {
         () {
           selectedColor = Colors.red;
           finalColor = selectedColor;
+          finalSize = EraserWidget.finaltempSize;
           setState(() {});
         },
       )
@@ -92,11 +103,13 @@ class _PaintingPageState extends State<PaintingPage> {
       //* button Xoá
       InkWell(
           onTap: () {
-            PaintPage.mylist[finalindex].controller.paths.clear();
-            PaintPage.mylist[finalindex].controller.filepath.clear();
-            PaintPage.mylist[finalindex].controller.paintss.clear();
-            controllerPaintPage.update();
-            setState(() {});
+            EraserWidget.eraserDialog(context, width, height, () {
+              PaintPage.mylist[finalindex].controller.paths.clear();
+              PaintPage.mylist[finalindex].controller.filepath.clear();
+              PaintPage.mylist[finalindex].controller.paintss.clear();
+              _key.currentState.update();
+              setState(() {});
+            });
           },
           child: Container(
             height: 30,
@@ -146,7 +159,6 @@ class _PaintingPageState extends State<PaintingPage> {
                 onPressed: () {
                   finalindex++;
                   index = finalindex;
-                  //controllerPaintPage.update();
                   _key.currentState.update();
                   setState(() {});
                 }))
@@ -162,7 +174,6 @@ class _PaintingPageState extends State<PaintingPage> {
                 onPressed: () {
                   finalindex--;
                   index = finalindex;
-                  //controllerPaintPage.update();
                   _key.currentState.update();
                   setState(() {});
                 }))
@@ -188,9 +199,14 @@ class _PaintingPageState extends State<PaintingPage> {
                 Container(
                     width: width,
                     height: height,
-                    child: CanvasPainting(
-                        key: _key,
-                        controller: PaintPage.mylist[finalindex].controller)),
+                    child: GetBuilder<ControllerPaintPage>(
+                      builder: (_) {
+                        return CanvasPainting(
+                            key: _key,
+                            controller:
+                                PaintPage.mylist[finalindex].controller);
+                      },
+                    )),
               ],
             ),
           ),
@@ -211,7 +227,7 @@ class _PaintingPageState extends State<PaintingPage> {
           ),
           //* thanh trên đầu
           Padding(
-            padding: EdgeInsets.only(left: width * 0.65, top: height * 0.02),
+            padding: EdgeInsets.only(left: width * 0.5, top: height * 0.02),
             child: Container(
               width: width * 0.5,
               height: height * 0.1,

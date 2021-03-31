@@ -11,6 +11,10 @@ class Controller {
   List<Paint> paintss = new List<Paint>();
   List<List<FilePath>> filepath = [];
 
+  List<Path> removedPaths = new List<Path>();
+  List<Paint> removedPaints = new List<Paint>();
+  List<List<FilePath>> removedFilePaths = [];
+
   setPath() {
     for (int i = 0; i < filepath.length; i++) {
       Path newPath = Path();
@@ -19,7 +23,6 @@ class Controller {
       pain.strokeJoin = StrokeJoin.round;
       pain.strokeCap = StrokeCap.round;
       pain.color = filepath[i][0].color;
-
       pain.strokeWidth = filepath[i][0].strokeWidth;
       for (int j = 0; j < filepath[i].length; j++) {
         if (j == 0) {
@@ -27,7 +30,6 @@ class Controller {
         }
         newPath.lineTo(filepath[i][j].startPoint, filepath[i][j].endPoint);
       }
-
       paintss.add(pain);
       paths.add(newPath);
     }
