@@ -15,6 +15,67 @@ class Controller {
   List<Paint> removedPaints = new List<Paint>();
   List<List<FilePath>> removedFilePaths = [];
 
+  bool isDeleteAll = false;
+
+  setRemoveAllData() {
+    List<Path> tempremovedPaths = new List<Path>();
+    List<Paint> tempremovedPaints = new List<Paint>();
+    List<List<FilePath>> tempremovedFilePaths = [];
+    removedPaths = paths;
+    removedPaints = paintss;
+    removedFilePaths = filepath;
+
+    paths.clear();
+    paintss.clear();
+    filepath.clear();
+    print(removedPaths);
+    isDeleteAll = true;
+  }
+
+  unDoallPage() {
+    paths = removedPaths;
+    paintss = removedPaints;
+    filepath = removedFilePaths;
+
+    print(paths);
+    removedFilePaths.clear();
+    removedPaints.clear();
+    removedPaths.clear();
+
+    isDeleteAll = false;
+  }
+
+  reDo() {
+    if (paintss.length > 0) {
+      //LƯU THONG TIN XÓA
+      removedPaths.add(paths.last);
+      removedPaints.add(paintss.last);
+      removedFilePaths.add(filepath.last);
+      //xóa
+      paintss.removeLast();
+      paths.removeLast();
+      filepath.removeLast();
+    }
+  }
+
+  undo() {
+    print(removedFilePaths.length);
+    if (removedPaths.length > 0) {
+      if (isDeleteAll)
+        unDoallPage();
+      else {
+        //khôi phục xóa từ thùng rác
+        paintss.add(removedPaints.last);
+        paths.add(removedPaths.last);
+        filepath.add(removedFilePaths.last);
+        //xóa trong mảng thùng rác
+        removedPaints.removeLast();
+        removedPaths.removeLast();
+        removedFilePaths.removeLast();
+      }
+    }
+  }
+
   setPath() {
     for (int i = 0; i < filepath.length; i++) {
       Path newPath = Path();

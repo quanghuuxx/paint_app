@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_paint/main.dart';
+import 'package:flutter_custom_paint/screens/paint_page.dart';
 import 'package:flutter_custom_paint/widgets/mobile_canvas.dart';
 
 class EraserWidget {
@@ -16,6 +18,7 @@ class EraserWidget {
     ),
     InkWell(
       onTap: () {
+        PaintPage.mylist[finalindex].controller.setRemoveAllData();
         clearFuntion();
         Navigator.of(context).pop();
       },

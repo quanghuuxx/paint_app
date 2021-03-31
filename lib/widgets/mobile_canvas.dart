@@ -32,9 +32,6 @@ class CanvasPaintingState extends State<CanvasPainting> {
   void update() {
     if (isOpened == false) {
       panDown(DragDownDetails());
-      // PaintPage.mylist[finalindex].controller.paintss.removeLast();
-      // PaintPage.mylist[finalindex].controller.paths.removeLast();
-      // PaintPage.mylist[finalindex].controller.filepath.removeLast();
       isOpened = true;
     } else {
       Get.find<ControllerPaintPage>().update();
@@ -49,11 +46,9 @@ class CanvasPaintingState extends State<CanvasPainting> {
       controller.paths.add(_path);
       RenderBox object = context.findRenderObject();
       Offset _localPosition = object.globalToLocal(details.globalPosition);
-      controller.paths.last
-          .moveTo(_localPosition.dx - 10, _localPosition.dy - 5);
+      controller.paths.last.moveTo(_localPosition.dx, _localPosition.dy);
 
-      controller.paths.last
-          .lineTo(_localPosition.dx - 10, _localPosition.dy - 5);
+      controller.paths.last.lineTo(_localPosition.dx, _localPosition.dy);
 
       Paint paint = new Paint()
         ..color = finalColor
@@ -65,8 +60,8 @@ class CanvasPaintingState extends State<CanvasPainting> {
       //
       controller.filepath.last.add(FilePath(
           color: finalColor,
-          startPoint: _localPosition.dx - 10,
-          endPoint: _localPosition.dy - 5,
+          startPoint: _localPosition.dx,
+          endPoint: _localPosition.dy,
           strokeWidth: finalSize));
 
       _repaint = true;
@@ -108,11 +103,11 @@ class CanvasPaintingState extends State<CanvasPainting> {
     fingerPostionX = _localPosition.dx;
 
     setState(() {
-      controller.paths.last.lineTo(fingerPostionX - 10.0, fingerPostionY - 5.0);
+      controller.paths.last.lineTo(fingerPostionX, fingerPostionY);
       controller.filepath.last.add(FilePath(
           color: finalColor,
-          startPoint: fingerPostionX - 10.0,
-          endPoint: fingerPostionY - 5.0,
+          startPoint: fingerPostionX,
+          endPoint: fingerPostionY,
           strokeWidth: finalSize));
     });
   }

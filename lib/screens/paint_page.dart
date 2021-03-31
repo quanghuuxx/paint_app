@@ -104,11 +104,8 @@ class _PaintingPageState extends State<PaintingPage> {
       InkWell(
           onTap: () {
             EraserWidget.eraserDialog(context, width, height, () {
-              PaintPage.mylist[finalindex].controller.paths.clear();
-              PaintPage.mylist[finalindex].controller.filepath.clear();
-              PaintPage.mylist[finalindex].controller.paintss.clear();
               _key.currentState.update();
-              setState(() {});
+              //setState(() {});
             });
           },
           child: Container(
