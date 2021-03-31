@@ -43,6 +43,8 @@ class _PaintingPageState extends State<PaintingPage> {
   _PaintingPageState(this.index);
   Color selectedColor;
   double strokeWidth;
+  bool showMore = false;
+  double leftPadding = 0.65;
   final GlobalKey<CanvasPaintingState> _key = GlobalKey();
 
   @override
@@ -97,9 +99,66 @@ class _PaintingPageState extends State<PaintingPage> {
     ];
   }
 
+  ///container animate
+  Widget animatedContainer(
+      bool condition, firstchild, secondchild, durationSecond) {
+    return AnimatedCrossFade(
+        firstCurve: Curves.easeInToLinear,
+        secondCurve: Curves.easeInToLinear,
+        duration: Duration(seconds: durationSecond),
+        crossFadeState:
+            condition ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        firstChild: firstchild,
+        secondChild: secondchild);
+  }
+
+  Widget menuRow() {
+    return Row(
+      children: [
+        IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              showMore = !showMore;
+              leftPadding = 0.65;
+              setState(() {});
+            }),
+        // Padding(padding: EdgeInsets.all(5)),
+        InkWell(
+            onTap: () {
+              dialogPenchose(context.width, context.height);
+            },
+            child: Container(
+              height: 30,
+              width: 30,
+              child: Image.asset('assets/images/pendr.png'),
+            )),
+        //* button +
+        IconButton(
+            icon: Icon(
+              Icons.add,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              this.setState(() {
+                PaintPage.mylist.add(
+                    PaintingPage(Controller(), PaintPage.mylist.length - 1));
+              });
+            }),
+        IconButton(
+            icon: Icon(
+              Icons.save,
+              color: Colors.black,
+            ),
+            onPressed: () async {
+              Map<String, dynamic> map = Controller().setMap();
+              RequestFirebase.addDoc(map);
+            }),
+      ],
+    );
+  }
+
   List<Widget> listChosingBar(width, height) {
     return [
-      Padding(padding: EdgeInsets.all(5)),
       //* button Xoá
       InkWell(
           onTap: () {
@@ -113,37 +172,19 @@ class _PaintingPageState extends State<PaintingPage> {
             width: 30,
             child: Image.asset('assets/images/eraser.png'),
           )),
-      Padding(padding: EdgeInsets.all(5)),
-      InkWell(
-          onTap: () {
-            dialogPenchose(width, height);
-          },
-          child: Container(
-            height: 30,
-            width: 30,
-            child: Image.asset('assets/images/pendr.png'),
-          )),
-      //* button +
-      IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Colors.black,
+      animatedContainer(
+          showMore,
+          IconButton(
+              icon: Icon(Icons.arrow_forward_ios),
+              onPressed: () {
+                showMore = !showMore;
+                leftPadding = 0.5;
+                setState(() {});
+              }),
+          Container(
+            child: menuRow(),
           ),
-          onPressed: () {
-            this.setState(() {
-              PaintPage.mylist
-                  .add(PaintingPage(Controller(), PaintPage.mylist.length - 1));
-            });
-          }),
-      IconButton(
-          icon: Icon(
-            Icons.save,
-            color: Colors.black,
-          ),
-          onPressed: () async {
-            Map<String, dynamic> map = Controller().setMap();
-            RequestFirebase.addDoc(map);
-          }),
+          1)
     ];
   }
 
@@ -224,13 +265,16 @@ class _PaintingPageState extends State<PaintingPage> {
           ),
           //* thanh trên đầu
           Padding(
-            padding: EdgeInsets.only(left: width * 0.5, top: height * 0.02),
+            padding:
+                EdgeInsets.only(left: width * leftPadding, top: height * 0.02),
             child: Container(
               width: width * 0.5,
               height: height * 0.1,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              child: Row(children: listColor() + listChosingBar(width, height)),
+              child: Row(
+                children: listColor() + listChosingBar(width, height),
+              ),
             ),
           ),
         ],
