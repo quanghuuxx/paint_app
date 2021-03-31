@@ -31,7 +31,7 @@ class Controller {
   }
 
   unDoallPage() {
-    for (int i = 0; i < removedFilePaths.length; i++) {
+    for (int i = removedFilePaths.length - 1; i > 0; i++) {
       paths.add(removedPaths[i]);
       paintss.add(removedPaints[i]);
       filepath.add(removedFilePaths[i]);
@@ -40,8 +40,6 @@ class Controller {
     removedFilePaths.clear();
     removedPaints.clear();
     removedPaths.clear();
-
-    isDeleteAll = false;
   }
 
   reDo() {
@@ -59,9 +57,10 @@ class Controller {
 
   undo() {
     if (removedPaths.length > 0) {
-      if (isDeleteAll)
-        unDoallPage();
-      else {
+      if (isDeleteAll) {
+        // unDoallPage();
+        isDeleteAll = false;
+      } else {
         //khôi phục xóa từ thùng rác
         paintss.add(removedPaints.last);
         paths.add(removedPaths.last);
