@@ -59,12 +59,13 @@ class PaintingPage extends StatefulWidget {
 }
 
 class _PaintingPageState extends State<PaintingPage> {
+  bool _isView = false;
   int index;
   _PaintingPageState(this.index);
   Color selectedColor;
   double strokeWidth;
   bool showMore = false;
-  double rightPadding = 0.60;
+  double leftPadding = 0.60;
   final GlobalKey<CanvasPaintingState> _key = GlobalKey();
 
   @override
@@ -82,6 +83,7 @@ class _PaintingPageState extends State<PaintingPage> {
       PaintingBar.butonRedo(() {
         _key.currentState.update();
       }),
+      //* black
       Padding(
         padding: const EdgeInsets.all(4.0),
         child: PaintingBar(selectedColor).colorContainer(
@@ -95,6 +97,7 @@ class _PaintingPageState extends State<PaintingPage> {
           },
         ),
       ),
+      //* blue
       Padding(
         padding: const EdgeInsets.all(4.0),
         child: PaintingBar(selectedColor).colorContainer(
@@ -108,6 +111,7 @@ class _PaintingPageState extends State<PaintingPage> {
           },
         ),
       ),
+      //* red
       Padding(
         padding: const EdgeInsets.all(4.0),
         child: PaintingBar(selectedColor).colorContainer(
@@ -158,6 +162,25 @@ class _PaintingPageState extends State<PaintingPage> {
                       PaintingPage(Controller(), PaintPage.mylist.length - 1));
                 });
               }),
+        ),
+        //* button View
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: InkWell(
+              onTap: () {
+                setState(() {
+                  _isView = true;
+                });
+              },
+              child: Container(
+                height: 30,
+                width: 30,
+                child: Icon(
+                  Icons.search,
+                  size: 20,
+                  color: Colors.white,
+                ),
+              )),
         ),
         //* button lưu
         Padding(
@@ -258,7 +281,7 @@ class _PaintingPageState extends State<PaintingPage> {
       AnimatedContainer(
         duration: Duration(milliseconds: 200),
         curve: Curves.linear,
-        width: showMore ? 120 : 0,
+        width: showMore ? 150 : 0,
         child: showMore ? menuRow() : Container(),
       ),
       //* button menu
@@ -271,9 +294,9 @@ class _PaintingPageState extends State<PaintingPage> {
           onPressed: () {
             showMore = !showMore;
             if (showMore)
-              rightPadding = 0.51;
+              leftPadding = 0.50;
             else
-              rightPadding = 0.60;
+              leftPadding = 0.60;
             setState(() {});
           })
     ];
@@ -326,42 +349,67 @@ class _PaintingPageState extends State<PaintingPage> {
               children: <Widget>[
                 //* Vùng dùng để vẽ
                 Container(
-                    width: width,
-                    height: height,
-                    child: GetBuilder<ControllerPaintPage>(
-                      builder: (_) {
-                        return CanvasPainting(
-                            key: _key,
-                            controller:
-                                PaintPage.mylist[finalindex].controller);
-                      },
-                    )),
+                  width: width,
+                  height: height,
+                  child: GetBuilder<ControllerPaintPage>(
+                    builder: (_) {
+                      return CanvasPainting(
+                          key: _key,
+                          controller: PaintPage.mylist[finalindex].controller);
+                    },
+                  ),
+                ),
               ],
             ),
           ),
 
+          //* button View
+          _isView
+              ? Container(
+                  height: Get.height * 0.1,
+                  width: Get.width * 0.05,
+                  margin:
+                      EdgeInsets.only(left: width * 0.9, top: height * 0.03),
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: Colors.black45,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: IconButton(
+                    padding: EdgeInsets.all(0),
+                    icon: Icon(Icons.search_off_outlined,
+                        size: 15, color: Colors.white),
+                    onPressed: () {
+                      setState(() {
+                        _isView = false;
+                      });
+                    },
+                  ))
+              : Container(),
           //* button back
-          Container(
-              height: Get.height * 0.1,
-              width: Get.width * 0.05,
-              margin: EdgeInsets.only(left: width * 0.015, top: height * 0.03),
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  color: Colors.black45,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: IconButton(
-                padding: EdgeInsets.all(0),
-                icon: Icon(Icons.arrow_back, size: 15, color: Colors.white),
-                onPressed: () {
-                  SystemChrome.setEnabledSystemUIOverlays(
-                      [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown,
-                  ]);
-                  Get.back();
-                },
-              )),
+          !_isView
+              ? Container(
+                  height: Get.height * 0.1,
+                  width: Get.width * 0.05,
+                  margin:
+                      EdgeInsets.only(left: width * 0.015, top: height * 0.03),
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: Colors.black45,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: IconButton(
+                    padding: EdgeInsets.all(0),
+                    icon: Icon(Icons.arrow_back, size: 15, color: Colors.white),
+                    onPressed: () {
+                      SystemChrome.setEnabledSystemUIOverlays(
+                          [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+                      SystemChrome.setPreferredOrientations([
+                        DeviceOrientation.portraitUp,
+                        DeviceOrientation.portraitDown,
+                      ]);
+                      Get.back();
+                    },
+                  ))
+              : Container(),
           //* nút chuyển trang mới
           buttonBackward(height, width),
           buttonForWard(height, width),
@@ -379,22 +427,24 @@ class _PaintingPageState extends State<PaintingPage> {
             ),
           ),
           //* thanh trên đầu
-          AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            margin: EdgeInsets.only(
-                left: width * rightPadding,
-                top: height * 0.02,
-                right: width * 0.01),
-            height: height * 0.1,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              color: ConfigTheme.primaryColor,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: listColor() + listChosingBar(width, height),
-            ),
-          ),
+          !_isView
+              ? AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  margin: EdgeInsets.only(
+                      left: width * leftPadding,
+                      top: height * 0.02,
+                      right: width * 0.01),
+                  height: height * 0.1,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: ConfigTheme.primaryColor,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: listColor() + listChosingBar(width, height),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );
