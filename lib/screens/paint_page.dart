@@ -479,4 +479,12 @@ class _PaintingPageState extends State<PaintingPage> {
           );
         });
   }
+
+  @override
+  void dispose() {
+    EraserWidget.isErasrering = false;
+    finalColor = Colors.black;
+    finalSize = 2;
+    super.dispose();
+  }
 }

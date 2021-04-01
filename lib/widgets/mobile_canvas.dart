@@ -1,9 +1,11 @@
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/path.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
+import 'package:flutter_custom_paint/widgets/eraser_widget.dart';
 import 'package:get/get.dart';
 import '../controllers/paint_controller.dart';
 
@@ -24,6 +26,8 @@ class CanvasPaintingState extends State<CanvasPainting> {
   Path _path = new Path();
   bool _repaint = false;
   int back = 0;
+  double dxeraser = 0;
+  double dyeraser = 0;
 
   Color activeColor = finalColor;
 
@@ -65,6 +69,8 @@ class CanvasPaintingState extends State<CanvasPainting> {
           strokeWidth: finalSize));
 
       _repaint = true;
+      dxeraser = _localPosition.dx;
+      dyeraser = _localPosition.dy;
     });
   }
 
@@ -109,6 +115,8 @@ class CanvasPaintingState extends State<CanvasPainting> {
           startPoint: fingerPostionX,
           endPoint: fingerPostionY,
           strokeWidth: finalSize));
+      dxeraser = fingerPostionX;
+      dyeraser = fingerPostionY;
     });
   }
 
@@ -143,6 +151,8 @@ class CanvasPaintingState extends State<CanvasPainting> {
               children: <Widget>[
                 CustomPaint(
                   painter: PathPainter(
+                      dxeraser: dxeraser,
+                      dyeraser: dyeraser,
                       paths: controller.paths,
                       repaint: _repaint,
                       paints: PaintPage.mylist[finalindex].controller.paintss),
@@ -160,10 +170,12 @@ class CanvasPaintingState extends State<CanvasPainting> {
 class PathPainter extends CustomPainter {
   List<Path> paths;
   List<Paint> paints;
+  double dxeraser = 0;
+  double dyeraser = 0;
   bool repaint;
   int i = 0;
-
-  PathPainter({this.paths, this.repaint, this.paints});
+  PathPainter(
+      {this.paths, this.repaint, this.paints, this.dxeraser, this.dyeraser});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -171,6 +183,19 @@ class PathPainter extends CustomPainter {
       canvas.drawPath(path, paints[i]);
       ++i;
     });
+    if (EraserWidget.isErasrering) {
+      final pointMode = PointMode.points;
+      final points = [
+        Offset(dxeraser, dyeraser),
+      ];
+      final paint = Paint()
+        ..color = Colors.grey[400]
+        ..strokeWidth = 4
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round
+        ..strokeWidth = finalSize;
+      canvas.drawPoints(pointMode, points, paint);
+    }
     i = 0;
     repaint = false;
   }
