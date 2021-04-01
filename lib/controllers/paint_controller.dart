@@ -17,7 +17,7 @@ class Controller {
 
   bool isDeleteAll = false;
   bool isOpened = false;
-
+  bool isView = false;
   setRemoveAllData() {
     for (int i = 0; i < paths.length; i++) {
       removedPaths.add(paths[i]);
@@ -133,11 +133,15 @@ class Controller {
     return pages;
   }
 
-  Map<String, dynamic> setMap({@required String name, @required String token}) {
+  Map<String, dynamic> setMap(
+      {@required String name,
+      @required String token,
+      @required dynamic image}) {
     return {
       "name": name,
       "page": getAllData(),
-      "token": "3rf2f23t523423f23r2fd2d543"
+      "token": "ABC",
+      "image": image,
     };
   }
 }

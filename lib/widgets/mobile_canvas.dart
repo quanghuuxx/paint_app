@@ -40,6 +40,9 @@ class CanvasPaintingState extends State<CanvasPainting> {
     if (PaintPage.mylist[finalindex].controller.isOpened == false) {
       panDown(DragDownDetails());
       PaintPage.mylist[finalindex].controller.isOpened = true;
+      PaintPage.mylist[finalindex].controller.paintss.removeLast();
+      PaintPage.mylist[finalindex].controller.paths.removeLast();
+      PaintPage.mylist[finalindex].controller.filepath.removeLast();
     } else {
       Get.find<ControllerPaintPage>().update();
     }
@@ -47,6 +50,7 @@ class CanvasPaintingState extends State<CanvasPainting> {
   }
 
   panDown(DragDownDetails details) {
+    if (PaintPage.mylist[finalindex].controller.isView) return;
     setState(() {
       controller.filepath.add(List<FilePath>());
       _path = new Path();
@@ -89,6 +93,7 @@ class CanvasPaintingState extends State<CanvasPainting> {
   }
 
   panUpdate(DragUpdateDetails details) {
+    if (PaintPage.mylist[finalindex].controller.isView) return;
     RenderBox object = context.findRenderObject();
     Offset _localPosition = object.globalToLocal(details.globalPosition);
 
@@ -124,10 +129,7 @@ class CanvasPaintingState extends State<CanvasPainting> {
   }
 
   panEnd(DragEndDetails details) {
-    // setState(() {
     fingerPostionY = 0.0;
-//      _repaint = true;
-    // });
   }
 
   reset() {

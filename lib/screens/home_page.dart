@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 5.0,
                       mainAxisSpacing: 5.0,
-                      childAspectRatio: 0.8,
+                      childAspectRatio: 1.1,
                     ),
                     itemCount: snapshot.data.size,
                     itemBuilder: (context, index) {

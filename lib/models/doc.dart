@@ -5,12 +5,14 @@ class Doc {
   String name;
   String token;
   List<dynamic> page;
+  List<int> image;
 
   Doc({
     this.id = '',
     this.name = '',
     this.token = '',
     this.page = const [],
+    this.image = const [],
   });
 
   Map<String, dynamic> toMap() {
@@ -18,6 +20,7 @@ class Doc {
       'name': name,
       'token': token,
       'page': page,
+      'image': image,
     };
   }
 
@@ -35,6 +38,7 @@ class Doc {
         id: documentSnapshot.id,
         name: map['name'],
         token: map['token'],
-        page: List<dynamic>.from(map['page']));
+        page: List<dynamic>.from(map['page']),
+        image: List<int>.from(map['image']));
   }
 }

@@ -43,7 +43,8 @@ class Loading {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Container(
-            height: MediaQuery.of(Get.context).size.height * 0.1,
+            height: 100,
+            width: 200,
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

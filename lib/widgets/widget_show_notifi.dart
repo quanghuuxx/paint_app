@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_paint/configs/config_theme.dart';
 import 'package:get/get.dart';
 
 class ShowNotifi {
@@ -8,10 +9,11 @@ class ShowNotifi {
       _isShow = true;
       Get.snackbar(null, title ?? 'không có nội dung !',
           colorText: Colors.white,
-          backgroundColor: Colors.black87,
+          backgroundColor: ConfigTheme.primaryColor,
           borderRadius: 4,
-          forwardAnimationCurve: Curves.linear,
-          reverseAnimationCurve: Curves.linear,
+          duration: Duration(seconds: 1),
+          forwardAnimationCurve: Curves.ease,
+          reverseAnimationCurve: Curves.ease,
           margin: EdgeInsets.only(
               bottom: Get.height * 0.1,
               left: Get.width * 0.05,

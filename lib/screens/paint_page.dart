@@ -4,6 +4,7 @@ import 'package:flutter_custom_paint/configs/config_theme.dart';
 import 'package:flutter_custom_paint/controllers/paint_controller.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/doc.dart';
+import 'package:flutter_custom_paint/models/loading.dart';
 import 'package:flutter_custom_paint/models/request_firebase.dart';
 import 'package:flutter_custom_paint/widgets/eraser_widget.dart';
 import 'package:flutter_custom_paint/widgets/mobile_canvas.dart';
@@ -169,7 +170,8 @@ class _PaintingPageState extends State<PaintingPage> {
           child: InkWell(
               onTap: () {
                 setState(() {
-                  _isView = true;
+                  _isView =
+                      PaintPage.mylist[finalindex].controller.isView = true;
                 });
               },
               child: Container(
@@ -199,16 +201,20 @@ class _PaintingPageState extends State<PaintingPage> {
   void addNew() async {
     bool response;
     if (PaintPage.doc != null) {
-      Map<String, dynamic> map = Controller()
-          .setMap(name: PaintPage.doc.name, token: PaintPage.doc.token);
+      Loading.show(newTitle: "Đợi Chút ...");
+      dynamic image = await PathPainter.takePic(Size(500, 800));
+      Map<String, dynamic> map = Controller().setMap(
+          name: PaintPage.doc.name, token: PaintPage.doc.token, image: image);
       response = await RequestFirebase.updateDoc(PaintPage.doc.id, map);
-      print(PaintPage.doc.id);
+      //* lưu mới
     } else {
       GlobalKey<FormState> formkey = GlobalKey<FormState>();
       final controllerText = TextEditingController();
       String name = await showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (context) => AlertDialog(
+          insetPadding: EdgeInsets.all(10),
           title: Text("Nhập tên :"),
           content: Form(
             key: formkey,
@@ -216,6 +222,7 @@ class _PaintingPageState extends State<PaintingPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
+                  autofocus: true,
                   controller: controllerText,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -249,11 +256,14 @@ class _PaintingPageState extends State<PaintingPage> {
         ),
       );
       if (name != null || name.isEmpty) {
+        Loading.show(newTitle: "Đợi Chút ...");
+        dynamic image = await PathPainter.takePic(Size(500, 800));
         Map<String, dynamic> map =
-            Controller().setMap(name: name, token: "token");
+            Controller().setMap(name: name, token: "token", image: image);
         response = await RequestFirebase.addDoc(map);
       }
     }
+    Loading.dismiss();
     ShowNotifi.showToast(
         title: response == true
             ? "Lưu Thành Công !"
@@ -299,17 +309,6 @@ class _PaintingPageState extends State<PaintingPage> {
               leftPadding = 0.60;
             setState(() {});
           }),
-      IconButton(
-          icon: Icon(Icons.ac_unit),
-          onPressed: () async {
-            print(await PathPainter.takePic(Size(width, height)));
-            Image img = Image.memory(await PathPainter.takePic(Size(500, 800)));
-            showDialog(
-                context: context,
-                child: Dialog(
-                  child: img,
-                ));
-          }),
     ];
   }
 
@@ -323,6 +322,7 @@ class _PaintingPageState extends State<PaintingPage> {
                   finalindex++;
                   index = finalindex;
                   _key.currentState.update();
+                  PaintPage.mylist[finalindex].controller.isView = _isView;
                   setState(() {});
                 }))
         : Container();
@@ -338,6 +338,7 @@ class _PaintingPageState extends State<PaintingPage> {
                   finalindex--;
                   index = finalindex;
                   _key.currentState.update();
+                  PaintPage.mylist[finalindex].controller.isView = _isView;
                   setState(() {});
                 }))
         : Container();
@@ -391,7 +392,8 @@ class _PaintingPageState extends State<PaintingPage> {
                         size: 15, color: Colors.white),
                     onPressed: () {
                       setState(() {
-                        _isView = false;
+                        _isView = PaintPage
+                            .mylist[finalindex].controller.isView = false;
                       });
                     },
                   ))
@@ -419,7 +421,8 @@ class _PaintingPageState extends State<PaintingPage> {
                       ]);
                       Get.back();
                     },
-                  ))
+                  ),
+                )
               : Container(),
           //* nút chuyển trang mới
           buttonBackward(height, width),
@@ -470,11 +473,11 @@ class _PaintingPageState extends State<PaintingPage> {
             width: width * 0.9,
             child: Padding(
               padding:
-                  EdgeInsets.only(left: width * 0.75, bottom: height * 0.5),
+                  EdgeInsets.only(left: width * 0.75, bottom: height * 0.3),
               child: Dialog(
                 backgroundColor: Colors.white,
                 child: Container(
-                  height: height * 0.9,
+                  // height: height * 0.9,
                   width: width * 0.7,
                   color: Colors.white,
                   child: Column(
@@ -482,6 +485,9 @@ class _PaintingPageState extends State<PaintingPage> {
                       penitem(selectedColor, 2),
                       penitem(selectedColor, 5),
                       penitem(selectedColor, 7),
+                      penitem(selectedColor, 10),
+                      penitem(selectedColor, 20),
+                      penitem(selectedColor, 40),
                     ],
                   ),
                 ),
