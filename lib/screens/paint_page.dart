@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_custom_paint/configs/config_theme.dart';
 import 'package:flutter_custom_paint/controllers/paint_controller.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/doc.dart';
@@ -63,7 +64,7 @@ class _PaintingPageState extends State<PaintingPage> {
   Color selectedColor;
   double strokeWidth;
   bool showMore = false;
-  double leftPadding = 0.65;
+  double rightPadding = 0.60;
   final GlobalKey<CanvasPaintingState> _key = GlobalKey();
 
   @override
@@ -123,19 +124,6 @@ class _PaintingPageState extends State<PaintingPage> {
     ];
   }
 
-  ///container animate
-  Widget animatedContainer(
-      bool condition, firstchild, secondchild, durationSecond) {
-    return AnimatedCrossFade(
-        firstCurve: Curves.easeInToLinear,
-        secondCurve: Curves.easeInToLinear,
-        duration: Duration(milliseconds: 500),
-        crossFadeState:
-            condition ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-        firstChild: firstchild,
-        secondChild: secondchild);
-  }
-
   Widget menuRow() {
     return Row(
       children: [
@@ -152,6 +140,7 @@ class _PaintingPageState extends State<PaintingPage> {
                 child: Icon(
                   Icons.border_color,
                   size: 20,
+                  color: Colors.white,
                 ),
               )),
         ),
@@ -161,7 +150,7 @@ class _PaintingPageState extends State<PaintingPage> {
           child: InkWell(
               child: Icon(
                 Icons.add,
-                color: Colors.black,
+                color: Colors.white,
               ),
               onTap: () {
                 this.setState(() {
@@ -176,11 +165,10 @@ class _PaintingPageState extends State<PaintingPage> {
           child: InkWell(
               child: Icon(
                 Icons.save,
-                color: Colors.black,
+                color: Colors.white,
               ),
               onTap: addNew),
         ),
-        //* button menu show
       ],
     );
   }
@@ -263,25 +251,29 @@ class _PaintingPageState extends State<PaintingPage> {
           width: 28,
           child: Image.asset(
             'assets/images/eraser.png',
-            color: Colors.grey,
+            color: Colors.white,
           ),
         ),
       ),
-      animatedContainer(
-          showMore,
-          Container(),
-          Container(
-            child: menuRow(),
-          ),
-          1),
+      AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.linear,
+        width: showMore ? 120 : 0,
+        child: showMore ? menuRow() : Container(),
+      ),
+      //* button menu
       IconButton(
-          icon: Icon(Icons.menu),
+          padding: EdgeInsets.all(0),
+          icon: Icon(
+            Icons.menu,
+            color: Colors.white,
+          ),
           onPressed: () {
             showMore = !showMore;
             if (showMore)
-              leftPadding = 0.55;
+              rightPadding = 0.51;
             else
-              leftPadding = 0.65;
+              rightPadding = 0.60;
             setState(() {});
           })
     ];
@@ -348,20 +340,18 @@ class _PaintingPageState extends State<PaintingPage> {
             ),
           ),
 
+          //* button back
           Container(
               height: Get.height * 0.1,
               width: Get.width * 0.05,
               margin: EdgeInsets.only(left: width * 0.015, top: height * 0.03),
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                  color: Colors.black12,
+                  color: Colors.black45,
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               child: IconButton(
                 padding: EdgeInsets.all(0),
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 15,
-                ),
+                icon: Icon(Icons.arrow_back, size: 15, color: Colors.white),
                 onPressed: () {
                   SystemChrome.setEnabledSystemUIOverlays(
                       [SystemUiOverlay.top, SystemUiOverlay.bottom]);
@@ -380,25 +370,29 @@ class _PaintingPageState extends State<PaintingPage> {
             margin: EdgeInsets.only(left: width * 0.015, top: height * 0.9),
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-                color: Colors.black12,
+                color: Colors.black45,
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             child: Text(
               '${(index + 1).toString()}/${PaintPage.mylist.length.toString()}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
             ),
           ),
           //* thanh trên đầu
-          Padding(
-            padding:
-                EdgeInsets.only(left: width * leftPadding, top: height * 0.02),
-            child: Container(
-              width: width * 0.5,
-              height: height * 0.1,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              child: Row(
-                children: listColor() + listChosingBar(width, height),
-              ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            margin: EdgeInsets.only(
+                left: width * rightPadding,
+                top: height * 0.02,
+                right: width * 0.01),
+            height: height * 0.1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              color: ConfigTheme.primaryColor,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: listColor() + listChosingBar(width, height),
             ),
           ),
         ],

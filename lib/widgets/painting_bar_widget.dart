@@ -28,7 +28,10 @@ class PaintingBar {
 
   static Widget butonRedo(Function() paintPageUpdate) {
     return IconButton(
-        icon: Icon(Icons.redo),
+        icon: Icon(
+          Icons.redo,
+          color: Colors.white,
+        ),
         onPressed: () {
           PaintPage.mylist[finalindex].controller.reDo();
           paintPageUpdate();
@@ -37,7 +40,11 @@ class PaintingBar {
 
   static Widget butonUndo(Function() paintPageUpdate) {
     return IconButton(
-        icon: Icon(Icons.undo),
+        padding: const EdgeInsets.all(0),
+        icon: Icon(
+          Icons.undo,
+          color: Colors.white,
+        ),
         onPressed: () {
           PaintPage.mylist[finalindex].controller.undo();
           paintPageUpdate();
