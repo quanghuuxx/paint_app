@@ -16,7 +16,7 @@ void main() async {
   Firebase.initializeApp();
 
   //* chuyển màn hình ngang
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  SystemChrome.setEnabledSystemUIOverlays([]);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
@@ -59,6 +59,7 @@ class _LaunchState extends State<Launch> {
     );
   }
 }
+
 //     _onload() async {
 //     // kiểm tra đăng nhập, nếu chưa đăng nhập thì hiển thị popup VAID
 //     VAID.auth(

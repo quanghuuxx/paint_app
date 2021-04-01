@@ -23,7 +23,6 @@ class Controller {
       removedPaints.add(paintss[i]);
       removedFilePaths.add(filepath[i]);
     }
-
     paths.clear();
     paintss.clear();
     filepath.clear();
