@@ -37,9 +37,9 @@ class CanvasPaintingState extends State<CanvasPainting> {
   CanvasPaintingState(this.controller);
 
   void update() {
-    if (PaintPage.mylist[finalindex].controller.isOpened == false) {
+    if (PaintPage.isOpened == false) {
       panDown(DragDownDetails());
-      PaintPage.mylist[finalindex].controller.isOpened = true;
+      PaintPage.isOpened = true;
       PaintPage.mylist[finalindex].controller.paintss.removeLast();
       PaintPage.mylist[finalindex].controller.paths.removeLast();
       PaintPage.mylist[finalindex].controller.filepath.removeLast();

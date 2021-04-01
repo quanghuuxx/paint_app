@@ -16,7 +16,7 @@ class PaintPage extends StatelessWidget {
   //* list các trang trong 1 doc
   static List<PaintingPage> mylist = [];
   static Doc doc;
-
+  static bool isOpened = false;
   void initMylist() {
     PaintPage.mylist.clear();
     finalindex = 0;
@@ -320,10 +320,11 @@ class _PaintingPageState extends State<PaintingPage> {
                 icon: Icon(Icons.arrow_forward_ios),
                 onPressed: () {
                   finalindex++;
-                  index = finalindex;
                   _key.currentState.update();
                   PaintPage.mylist[finalindex].controller.isView = _isView;
-                  setState(() {});
+                  setState(() {
+                    index = finalindex;
+                  });
                 }))
         : Container();
   }
@@ -552,6 +553,7 @@ class _PaintingPageState extends State<PaintingPage> {
     EraserWidget.isErasrering = false;
     finalColor = Colors.black;
     finalSize = 2;
+    PaintPage.isOpened = false;
     super.dispose();
   }
 }
