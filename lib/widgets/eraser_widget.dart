@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_paint/configs/config_theme.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
 import 'package:flutter_custom_paint/widgets/mobile_canvas.dart';
@@ -11,10 +12,17 @@ class EraserWidget {
   static bool isErasrering = false;
   static List<Widget> listChosen(context) => [
         Container(
-          color: Colors.blue,
           height: 30,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: ConfigTheme.primaryColor,
+          ),
           child: Center(
-            child: Text('Chọn phương thức tẩy'),
+            child: Text(
+              'Chọn kích cỡ Tẩy',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
         Row(
@@ -28,18 +36,19 @@ class EraserWidget {
                 PaintPage.mylist[finalindex].controller.setRemoveAllData();
                 clearFuntion();
                 Navigator.of(context).pop();
+                EraserWidget.isErasrering = false;
               },
               child: Container(
                 margin: EdgeInsets.only(top: 5),
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 2.0),
                     borderRadius: BorderRadius.circular(50)),
-                height: 40,
-                width: 40,
+                height: 50,
+                width: 50,
                 child: Center(
                   child: Text(
                     'Tẩy Hết',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -47,6 +56,7 @@ class EraserWidget {
           ],
         ),
       ];
+
   static eraserDialog(context, width, height, Function() clearFun) {
     EraserWidget.context = context;
     clearFuntion = clearFun;
@@ -81,7 +91,6 @@ class EraserWidget {
           }
           isErasrering = true;
           finalSize = height;
-          print('đ');
           Navigator.of(context).pop();
         },
         child: Container(

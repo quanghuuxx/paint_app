@@ -27,27 +27,32 @@ class PaintingBar {
   }
 
   static Widget butonRedo(Function() paintPageUpdate) {
-    return IconButton(
-        icon: Icon(
-          Icons.redo,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          PaintPage.mylist[finalindex].controller.reDo();
-          paintPageUpdate();
-        });
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+          child: Icon(
+            Icons.redo,
+            color: Colors.white,
+          ),
+          onTap: () {
+            PaintPage.mylist[finalindex].controller.reDo();
+            paintPageUpdate();
+          }),
+    );
   }
 
   static Widget butonUndo(Function() paintPageUpdate) {
-    return IconButton(
-        padding: const EdgeInsets.all(0),
-        icon: Icon(
-          Icons.undo,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          PaintPage.mylist[finalindex].controller.undo();
-          paintPageUpdate();
-        });
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+          child: Icon(
+            Icons.undo,
+            color: Colors.white,
+          ),
+          onTap: () {
+            PaintPage.mylist[finalindex].controller.undo();
+            paintPageUpdate();
+          }),
+    );
   }
 }
