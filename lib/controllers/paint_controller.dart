@@ -17,6 +17,8 @@ class Controller {
 
   bool isDeleteAll = false;
 
+  bool isOpened = false;
+
   setRemoveAllData() {
     for (int i = 0; i < paths.length; i++) {
       removedPaths.add(paths[i]);

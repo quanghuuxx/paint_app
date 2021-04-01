@@ -18,6 +18,7 @@ class PaintPage extends StatelessWidget {
 
   void initMylist() {
     PaintPage.mylist.clear();
+    finalindex = 0;
     if (doc != null) {
       for (int i = 0; i < doc.page.length; ++i) {
         Controller controller = Controller();
@@ -26,7 +27,6 @@ class PaintPage extends StatelessWidget {
         PaintPage.mylist.last.controller.setPath();
       }
     } else {
-      finalindex = 0;
       mylist = [PaintingPage(Controller(), 0)];
     }
   }
