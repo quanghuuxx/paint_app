@@ -4,7 +4,9 @@ import 'package:flutter_custom_paint/screens/paint_page.dart';
 
 class PaintingBar {
   Color selectedColor;
+
   PaintingBar(this.selectedColor);
+
   Widget colorContainer(Color color, Function() ontap) {
     return InkWell(
       onTap: ontap,
@@ -26,7 +28,10 @@ class PaintingBar {
 
   static Widget butonRedo(Function() paintPageUpdate) {
     return IconButton(
-        icon: Icon(Icons.redo),
+        icon: Icon(
+          Icons.redo,
+          color: Colors.white,
+        ),
         onPressed: () {
           PaintPage.mylist[finalindex].controller.reDo();
           paintPageUpdate();
@@ -35,7 +40,11 @@ class PaintingBar {
 
   static Widget butonUndo(Function() paintPageUpdate) {
     return IconButton(
-        icon: Icon(Icons.undo),
+        padding: const EdgeInsets.all(0),
+        icon: Icon(
+          Icons.undo,
+          color: Colors.white,
+        ),
         onPressed: () {
           PaintPage.mylist[finalindex].controller.undo();
           paintPageUpdate();

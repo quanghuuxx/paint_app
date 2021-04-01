@@ -8,6 +8,7 @@ class EraserWidget {
   static BuildContext context;
   static var clearFuntion;
   static double finaltempSize = 2;
+  static bool isErasrering = false;
   static List<Widget> listChosen = [
     Container(
       color: Colors.blue,
@@ -16,22 +17,35 @@ class EraserWidget {
         child: Text('Chọn phương thức tẩy'),
       ),
     ),
-    InkWell(
-      onTap: () {
-        PaintPage.mylist[finalindex].controller.setRemoveAllData();
-        clearFuntion();
-        Navigator.of(context).pop();
-      },
-      child: Container(
-        height: 30,
-        child: Center(
-          child: Text('Tẩy cả trang'),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        colorContainer(context, Colors.white, 20, 20, 0),
+        colorContainer(context, Colors.white, 30, 30, 1),
+        colorContainer(context, Colors.white, 40, 40, 2),
+        InkWell(
+          onTap: () {
+            PaintPage.mylist[finalindex].controller.setRemoveAllData();
+            clearFuntion();
+            Navigator.of(context).pop();
+          },
+          child: Container(
+            margin: EdgeInsets.only(top: 5),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 2.0),
+                borderRadius: BorderRadius.circular(50)),
+            height: 40,
+            width: 40,
+            child: Center(
+              child: Text(
+                'Tẩy Hết',
+                style: TextStyle(fontSize: 10),
+              ),
+            ),
+          ),
         ),
-      ),
+      ],
     ),
-    colorContainer(context, Colors.white, 20, 20, 0),
-    colorContainer(context, Colors.white, 30, 30, 1),
-    colorContainer(context, Colors.white, 40, 40, 2),
   ];
   static eraserDialog(context, width, height, Function() clearFun) {
     EraserWidget.context = context;
@@ -39,22 +53,16 @@ class EraserWidget {
     showDialog(
         context: context,
         builder: (builder) {
-          return Container(
-            width: width * 0.3,
-            height: height * 0.7,
-            child: Padding(
-              padding:
-                  EdgeInsets.only(left: width * 0.70, bottom: height * 0.1),
-              child: Dialog(
-                backgroundColor: Colors.white,
-                child: Container(
-                  // height: height * 0.9,
-                  width: width * 0.7,
-                  color: Colors.white,
-                  child: Column(
-                    children: listChosen,
-                  ),
-                ),
+          return Dialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            backgroundColor: Colors.white,
+            child: Container(
+              padding: EdgeInsets.all(5),
+              width: width * 0.1,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: listChosen,
               ),
             ),
           );
@@ -68,7 +76,10 @@ class EraserWidget {
       child: InkWell(
         onTap: () {
           finalColor = Colors.white;
-          finaltempSize = finalSize;
+          if (isErasrering == false) {
+            finaltempSize = finalSize;
+          }
+          isErasrering = true;
           finalSize = height;
           Navigator.of(context).pop();
         },

@@ -1,11 +1,13 @@
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Doc {
+  String id;
   String name;
   String token;
   List<dynamic> page;
 
   Doc({
+    this.id = '',
     this.name = '',
     this.token = '',
     this.page = const [],
@@ -19,15 +21,20 @@ class Doc {
     };
   }
 
-  factory Doc.fromMap(Map<String, dynamic> map) {
+  // factory Doc.fromMap(Map<String, dynamic> map) {
+  //   return Doc(
+  //     name: map['name'],
+  //     token: map['token'],
+  //     page: List<dynamic>.from(map['page']),
+  //   );
+  // }
+
+  factory Doc.formDocumentSnapShot(QueryDocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> map = documentSnapshot.data();
     return Doc(
-      name: map['name'],
-      token: map['token'],
-      page: List<dynamic>.from(map['page']),
-    );
+        id: documentSnapshot.id,
+        name: map['name'],
+        token: map['token'],
+        page: List<dynamic>.from(map['page']));
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Doc.fromJson(String source) => Doc.fromMap(json.decode(source));
 }

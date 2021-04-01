@@ -132,9 +132,9 @@ class Controller {
     return pages;
   }
 
-  Map<String, dynamic> setMap() {
+  Map<String, dynamic> setMap({@required String name, @required String token}) {
     return {
-      "name": "bài mới",
+      "name": name,
       "page": getAllData(),
       "token": "3rf2f23t523423f23r2fd2d543"
     };

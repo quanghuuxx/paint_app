@@ -113,10 +113,10 @@ class CanvasPaintingState extends State<CanvasPainting> {
   }
 
   panEnd(DragEndDetails details) {
-    setState(() {
-      fingerPostionY = 0.0;
+    // setState(() {
+    fingerPostionY = 0.0;
 //      _repaint = true;
-    });
+    // });
   }
 
   reset() {
@@ -145,7 +145,7 @@ class CanvasPaintingState extends State<CanvasPainting> {
                   painter: PathPainter(
                       paths: controller.paths,
                       repaint: _repaint,
-                      paints: controller.paintss),
+                      paints: PaintPage.mylist[finalindex].controller.paintss),
                   size: Size.infinite,
                 ),
               ],
