@@ -16,7 +16,6 @@ class Controller {
   List<List<FilePath>> removedFilePaths = [];
 
   bool isDeleteAll = false;
-
   bool isOpened = false;
 
   setRemoveAllData() {
