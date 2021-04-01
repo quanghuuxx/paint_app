@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/path.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
@@ -198,6 +201,32 @@ class PathPainter extends CustomPainter {
     }
     i = 0;
     repaint = false;
+  }
+
+  static Future<Uint8List> takePic(Size size) async {
+    List<Path> pa = PaintPage.mylist[0].controller.paths;
+    PictureRecorder pictureRecorder = PictureRecorder();
+    Canvas canvass = Canvas(pictureRecorder);
+    int i = 0;
+    pa.forEach((pa) {
+      canvass.drawPath(pa, PaintPage.mylist[0].controller.paintss[i]);
+      ++i;
+    });
+    Picture picture = pictureRecorder.endRecording();
+    Image image =
+        await picture.toImage(size.height.toInt(), size.width.toInt());
+
+    ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+    Uint8List pngBytes = byteData.buffer.asUint8List();
+    return pngBytes;
+    // return image;
+  }
+
+  static Future<Image> tinypng(bytearray) async {
+    // copy from decodeImageFromList of package:flutter/painting.dart
+    final codec = await instantiateImageCodec(bytearray);
+    final frameInfo = await codec.getNextFrame();
+    return frameInfo.image;
   }
 
   @override

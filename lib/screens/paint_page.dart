@@ -241,7 +241,7 @@ class _PaintingPageState extends State<PaintingPage> {
     return [
       //* button Xoá
       InkWell(
-        onTap: () {
+        onTap: () async {
           EraserWidget.eraserDialog(context, width, height, () {
             _key.currentState.update();
           });
@@ -275,7 +275,18 @@ class _PaintingPageState extends State<PaintingPage> {
             else
               rightPadding = 0.60;
             setState(() {});
-          })
+          }),
+      IconButton(
+          icon: Icon(Icons.ac_unit),
+          onPressed: () async {
+            print(await PathPainter.takePic(Size(width, height)));
+            Image img = Image.memory(await PathPainter.takePic(Size(500, 800)));
+            showDialog(
+                context: context,
+                child: Dialog(
+                  child: img,
+                ));
+          }),
     ];
   }
 
