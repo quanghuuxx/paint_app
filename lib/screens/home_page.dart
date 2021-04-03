@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_paint/configs/config_vaway.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_custom_paint/models/doc.dart';
 import 'package:flutter_custom_paint/models/request_firebase.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
 import 'package:flutter_custom_paint/widgets/widget_doc.dart';
+import 'package:flutter_custom_paint/widgets/widget_show_notifi.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +22,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     docs = RequestFirebase.getAllDoc();
+    Timer(Duration(seconds: 1), () {
+      ShowNotifi.showToast(
+          title: "Xin Chào " + ConfigsVAWAY.userProfile.fullname ?? "");
+    });
     super.initState();
   }
 

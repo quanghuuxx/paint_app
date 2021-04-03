@@ -397,7 +397,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: f087cff4aba8b545834e71497c77e7c498aeffc7
+      resolved-ref: f7788d0d67bfdfd7f0049768a7cf45ffffc0be04
       url: "https://trongtin045@bitbucket.org/vaway/vaid.git"
     source: git
     version: "0.1.6"

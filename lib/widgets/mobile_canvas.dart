@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -52,7 +51,7 @@ class CanvasPaintingState extends State<CanvasPainting> {
   panDown(DragDownDetails details) {
     if (PaintPage.mylist[finalindex].controller.isView) return;
     setState(() {
-      controller.filepath.add(List<FilePath>());
+      controller.filepath.add([]);
       _path = new Path();
       controller.paths.add(_path);
       RenderBox object = context.findRenderObject();

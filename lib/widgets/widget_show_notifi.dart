@@ -4,14 +4,14 @@ import 'package:get/get.dart';
 
 class ShowNotifi {
   static bool _isShow = false;
-  static void showToast({@required String title}) {
+  static void showToast({@required String title, Duration duration}) {
     if (!_isShow) {
       _isShow = true;
       Get.snackbar(null, title ?? 'không có nội dung !',
           colorText: Colors.white,
           backgroundColor: ConfigTheme.primaryColor,
           borderRadius: 4,
-          duration: Duration(seconds: 1),
+          duration: duration ?? Duration(seconds: 2),
           forwardAnimationCurve: Curves.ease,
           reverseAnimationCurve: Curves.ease,
           margin: EdgeInsets.only(
