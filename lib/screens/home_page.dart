@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_paint/configs/config_vaway.dart';
+import 'package:flutter_custom_paint/main.dart';
 import 'package:flutter_custom_paint/models/doc.dart';
 import 'package:flutter_custom_paint/models/request_firebase.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
 import 'package:flutter_custom_paint/widgets/widget_doc.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,6 +33,14 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 PaintPage.doc = null;
                 Get.to(() => PaintPage());
+              }),
+          IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () async {
+                SharedPreferences sharedPreferences =
+                    await SharedPreferences.getInstance();
+                sharedPreferences.remove(ConfigsVAWAY.keyUserProfile);
+                Get.to(() => Launch());
               })
         ],
       ),

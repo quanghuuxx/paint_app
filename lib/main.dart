@@ -65,6 +65,7 @@ class _LaunchState extends State<Launch> {
       callback: (response) async {
         if (response != null) {
           if (response['success'] = true) {
+            print(response);
             sharedPreferences.setString(
                 ConfigsVAWAY.keyUserProfile, json.encode(response['results']));
             ConfigsVAWAY.token = response['results']['token'];
@@ -91,6 +92,9 @@ class _LaunchState extends State<Launch> {
         var profile = data['profile'];
         ConfigsVAWAY.userProfile = UserProfile.fromMap(profile);
       });
+    } else {
+      ConfigsVAWAY.token = null;
+      ConfigsVAWAY.userProfile = null;
     }
     print(_dataUser);
   }
