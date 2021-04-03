@@ -12,7 +12,16 @@ class WidgetDoc extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(5)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 3,
+              blurRadius: 10,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ]),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +36,7 @@ class WidgetDoc extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Image.memory(Uint8List.fromList(doc.image)),
+          Expanded(child: Image.memory(Uint8List.fromList(doc.image))),
         ],
       ),
     );

@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                 return Center(child: Text("Không có gì ! Thử tạo bài mới ! "));
               return RefreshIndicator(
                 onRefresh: () async {
-                  await Future.delayed(Duration(seconds: 3));
+                  docs.get();
                 },
                 child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
