@@ -65,8 +65,6 @@ class _LaunchState extends State<Launch> {
       callback: (response) async {
         if (response != null) {
           if (response['success'] = true) {
-            // SharedPreferences sharedPreferences =
-            //     await SharedPreferences.getInstance();
             sharedPreferences.setString(
                 ConfigsVAWAY.keyUserProfile, json.encode(response['results']));
             ConfigsVAWAY.token = response['results']['token'];
