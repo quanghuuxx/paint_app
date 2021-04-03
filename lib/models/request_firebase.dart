@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_custom_paint/configs/config_vaway.dart';
 import 'package:flutter_custom_paint/models/doc.dart';
 
 class RequestFirebase {
@@ -14,7 +15,7 @@ class RequestFirebase {
 
   static Query getAllDoc() {
     return doc
-        .where('token', isEqualTo: 'ABC')
+        .where('token', isEqualTo: ConfigsVAWAY.token)
         .orderBy('name', descending: false);
   }
 

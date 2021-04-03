@@ -203,8 +203,8 @@ class _PaintingPageState extends State<PaintingPage> {
     if (PaintPage.doc != null) {
       Loading.show(newTitle: "Đợi Chút ...");
       dynamic image = await PathPainter.takePic(Size(500, 800));
-      Map<String, dynamic> map = Controller().setMap(
-          name: PaintPage.doc.name, token: PaintPage.doc.token, image: image);
+      Map<String, dynamic> map =
+          Controller().setMap(name: PaintPage.doc.name, image: image);
       response = await RequestFirebase.updateDoc(PaintPage.doc.id, map);
       //* lưu mới
     } else {
@@ -259,7 +259,7 @@ class _PaintingPageState extends State<PaintingPage> {
         Loading.show(newTitle: "Đợi Chút ...");
         dynamic image = await PathPainter.takePic(Size(500, 800));
         Map<String, dynamic> map =
-            Controller().setMap(name: name, token: "token", image: image);
+            Controller().setMap(name: name, image: image);
         response = await RequestFirebase.addDoc(map);
       }
     }

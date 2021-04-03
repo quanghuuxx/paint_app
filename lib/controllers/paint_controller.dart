@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_paint/configs/config_vaway.dart';
 import 'package:flutter_custom_paint/screens/paint_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter_custom_paint/models/path.dart';
@@ -7,7 +8,7 @@ import 'package:flutter_custom_paint/models/path.dart';
 class ControllerPaintPage extends GetxController {}
 
 class Controller {
-  List<Path> paths = new List<Path>();
+  List<Path> paths = [];
   List<Paint> paintss = new List<Paint>();
   List<List<FilePath>> filepath = [];
 
@@ -134,13 +135,11 @@ class Controller {
   }
 
   Map<String, dynamic> setMap(
-      {@required String name,
-      @required String token,
-      @required dynamic image}) {
+      {@required String name, @required dynamic image}) {
     return {
       "name": name,
       "page": getAllData(),
-      "token": "ABC",
+      "token": ConfigsVAWAY.token,
       "image": image,
     };
   }

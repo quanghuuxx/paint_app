@@ -37,9 +37,10 @@ class Loading {
       _dismiss();
     });
     showDialog(
-        context: Get.context,
-        barrierDismissible: false,
-        child: Dialog(
+      context: Get.context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Container(
@@ -62,7 +63,9 @@ class Loading {
               ],
             ),
           ),
-        ));
+        );
+      },
+    );
     _isLoading = true;
   }
 
