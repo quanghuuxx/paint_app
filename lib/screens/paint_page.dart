@@ -265,9 +265,9 @@ class _PaintingPageState extends State<PaintingPage> {
     }
     Loading.dismiss();
     ShowNotifi.showToast(
-        title: response == true
-            ? "Lưu Thành Công !"
-            : "Thất Bại ! Có Lỗi Gì Đó !");
+        title:
+            response == true ? "Lưu Thành Công !" : "Thất Bại ! Có Lỗi Gì Đó !",
+        duration: Duration(seconds: 1));
   }
 
   List<Widget> listChosingBar(width, height) {
